@@ -1,0 +1,14 @@
+{
+    "className" : "AvailabilityZone",
+    "fields" : {
+        "id" : {
+            "path" : "$.zoneName",
+            "dataType" : "string"
+        },
+        "region": {
+            "path" : "$.regionName",
+            "class" : "Region"
+        }
+    }
+
+}
