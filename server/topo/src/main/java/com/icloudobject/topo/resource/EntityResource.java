@@ -5,6 +5,7 @@ package com.icloudobject.topo.resource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -159,6 +160,60 @@ public class EntityResource extends
         return super.modifyEntityField(uriInfo, reponame, branch, metadata,
                 oid, fieldName, priority, consistPolicy, casMode, jsonString,
                 modeVal, request);
+    }
+    
+    @POST
+    @Path("/topo/{metadata}")
+    public Response topoCreate(@Context final UriInfo uriInfo,
+            @PathParam("reponame") final String reponame,
+            @PathParam("branch") final String branch,
+            @PathParam("metadata") final String metadata,
+            @HeaderParam("X-CMS-PRIORITY") final String priority,
+            @HeaderParam("X-CMS-CONSISTENCY") final String consistPolicy,
+            String jsonString, @QueryParam("mode") String modeVal,
+            @Context HttpServletRequest request)
+    {
+        String topoClientId = getTopoClientId(request);
+        if (topoClientId != null) {
+            jsonString = convertTopo(topoClientId, reponame, jsonString);
+        }
+        return super.createEntity(uriInfo, reponame, branch, metadata,
+                priority, consistPolicy, jsonString, modeVal, request);
+    }
+    
+    @PUT
+    @Path("/topo/{metadata}")
+    public Response topoUpdate(@Context final UriInfo uriInfo,
+            @PathParam("reponame") final String reponame,
+            @PathParam("branch") final String branch,
+            @PathParam("metadata") final String metadata,
+            @HeaderParam("X-CMS-PRIORITY") final String priority,
+            @HeaderParam("X-CMS-CONSISTENCY") final String consistPolicy,
+            String jsonString, @QueryParam("mode") String modeVal,
+            @Context HttpServletRequest request)
+    {
+        String topoClientId = getTopoClientId(request);
+        if (topoClientId != null) {
+            jsonString = convertTopo(topoClientId, reponame, jsonString);
+        }
+        //TODO : topo update 
+        return null;
+//        return super.up(uriInfo, reponame, branch, metadata,
+//                priority, consistPolicy, jsonString, modeVal, request);
+    }
+    
+    @GET
+    @Path("/topo/{metadata}")
+    public String topoTest(@Context final UriInfo uriInfo,
+            @PathParam("reponame") final String reponame,
+            @PathParam("branch") final String branch,
+            @PathParam("metadata") final String metadata,
+            @HeaderParam("X-CMS-PRIORITY") final String priority,
+            @HeaderParam("X-CMS-CONSISTENCY") final String consistPolicy,
+            String jsonString, @QueryParam("mode") String modeVal,
+            @Context HttpServletRequest request)
+    {
+        return "Topo API ready";
     }
 
 }
