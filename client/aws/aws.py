@@ -51,7 +51,7 @@ def get_region():
 def process_object(class_name, json_array):
     "process on one object in the cloud, post to CMS"
     headers = {"Content-Type" : "Application/json"}
-    url = config['cms_endpoint'] + config['topo_repo'] + "/branches/main/" + class_name
+    url = config['cms_endpoint'] + config['topo_repo'] + "/branches/main/topo/" + class_name
     print (class_name + "\n" + json.dumps(json_array, indent=4, sort_keys=True))
     r = requests.post(url,data=json.dumps(json_array), headers=headers)
     return r.json()

@@ -2,13 +2,12 @@
     "className" : "AvailabilityZone",
     "fields" : {
         "id" : {
-            "path" : "$.zoneName",
+            "path" : "$.ZoneName",
             "dataType" : "string"
         },
         "region": {
-            "path" : "$.regionName",
+            "path" : "$.RegionName",
             "class" : "Region"
         }
     }
-
 }

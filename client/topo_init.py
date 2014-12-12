@@ -56,11 +56,8 @@ def init_class(repo, class_name):
 
 def upsert_mapping_metadata(repo,class_name,payload):
     # check to see if Mapping schema had been defined
-    response = requests.get(cms_endpoint + repo + "/metadata/" + class_name).json()
-    if (response['status']['code'] == "404"):
-        url = cms_endpoint + repo + "/metadata"
-    else:
-        url = cms_endpoint + repo + "/metadata/" + class_name
+    response = requests.delete(cms_endpoint + repo + "/metadata/" + class_name).json()
+    url = cms_endpoint + repo + "/metadata"
     return post_change(url,payload)
 
 def mapping2metadata(repo, mapping):
