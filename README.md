@@ -60,7 +60,9 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
 2. Init the ico client
    
         set environment variable for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-        cd client/icotopo/bin
+	cd client
+	python setup.py install	
+        cd bin
         python init.py
         python ec2.py
         python s3.py

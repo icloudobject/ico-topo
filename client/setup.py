@@ -11,7 +11,7 @@ config = {
     'author_email': 'icloudobject@gmail.com',
     'version': '0.1',
     'install_requires': ['nose'],
-    'packages': ['icotopo'],
+    'packages': ['icotopo','icotopo.awsclient','icotopo.ec2','icotopo.s3','icotopo.yidbclient'],
     'scripts': [],
     'name': 'icotopo'
 }
