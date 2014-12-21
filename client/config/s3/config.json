@@ -1,5 +1,5 @@
 {
-    "cms_endpoint" : "http://localhost:8080/topo/repositories/",
+    "cms_endpoint" : "http://localhost:8080/topo",
     "topo_repo" : "topoaws",
     "sync_minutes" : 160,
     "billing_bucket_name" : "icobilling",

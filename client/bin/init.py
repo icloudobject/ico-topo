@@ -38,7 +38,10 @@ def mapping2metadata(yidb, repo, mapping):
             field['relationType'] = 'Reference'
             field['dataType'] = 'relationship'
         else:
-            field['dataType'] = field_def['dataType']
+            if ('dataType' in field_def):
+                field['dataType'] = field_def['dataType']
+            else:
+                field['dataType'] = 'string'
         fields[item] = field
     return metadata
 
@@ -54,7 +57,7 @@ def main():
     # enable delete for metadata in YiDB
     yidb = YidbClient(config['cms_endpoint'])
     logging.info("allow metadata delete")
-    response = yidb.post_change(config['cms_endpoint'] + "/config/", '{"MetadataDelete": true}')
+    response = yidb.enable_delete()
     logging.info("response status:" + str(response.status_code) + " content:" + response.content)
 
     # check to see if repo exists, if not, create the repo

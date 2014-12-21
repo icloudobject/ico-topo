@@ -28,6 +28,7 @@ import com.ebay.cloud.cms.query.service.QueryContext;
 import com.ebay.cloud.cms.sysmgmt.priority.CMSPriority;
 import com.ebay.cloud.cms.sysmgmt.server.CMSServer;
 import com.jayway.jsonpath.JsonPath;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 import net.minidev.json.JSONArray;
@@ -97,11 +98,11 @@ public class EntityResource extends
             Object pathObj = attrDef.get("path");
             Object value = null;
             if (attrName.equals("id")) {
-                String [] paths = (String[]) pathObj;
-                for (int i = 0; i < paths.length; i++) {
-                    StringBuffer sb = new StringBuffer();
+                BasicDBList paths = (BasicDBList) pathObj;
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < paths.size(); i++) {
                     try {
-                        String v1 = JsonPath.read(jsonString, paths[i]);
+                        String v1 = JsonPath.read(jsonString, (String) paths.get(i));
                         if (sb.length() == 0) {
                             sb.append(v1);
                         } else {
@@ -111,6 +112,7 @@ public class EntityResource extends
                         // pass
                     }
                 }
+                value = sb.toString();
             } else {
                 try {
                     value = JsonPath.read(jsonString, (String) pathObj);
@@ -124,7 +126,7 @@ public class EntityResource extends
             }
             if (attrName.equals("id")) {
                 if (value == null) {
-                    return "notIdFound";
+                    return "noIdFound";
                 }
                 objectId = value.toString();
             }
@@ -151,12 +153,17 @@ public class EntityResource extends
         if (objectId == null) {
             return "objectIdIsNull";
         }
+        String status = "FAIL";
         if (existObject(reponame, className, objectId)) {
             try {
                 Response r = super.modifyEntity(uriInfo, reponame, branch,
                         metadata, objectId, priority, consistPolicy,
                         payload.toString(), modeVal, request);
-                System.out.println(r.getStatus());
+                if (r.getStatus() == 200) {
+                    status = "INSERTED";
+                } else {
+                    status = "INSERT_FAIL";
+                }
             } catch (Exception e) {
                 return "Error when modify " + className + " for " + objectId
                         + " message is:" + e.getMessage();
@@ -166,13 +173,17 @@ public class EntityResource extends
                 Response r = super.createEntity(uriInfo, reponame, branch,
                         className, priority, consistPolicy, payload.toString(),
                         modeVal, request);
-                System.out.println(r.getStatus());
+                if (r.getStatus() == 200) {
+                    status = "UPDATED";
+                } else {
+                    status = "UPDATE_FAIL";
+                }
             } catch (Exception e) {
                 return "Error when create " + className + " for " + objectId
                         + " message is:" + e.getMessage();
             }
         }
-        return "OK";
+        return status;
     }
 
     private boolean existObject(String repo, String className, String id) {

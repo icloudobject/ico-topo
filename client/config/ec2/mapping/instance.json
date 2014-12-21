@@ -1,0 +1,14 @@
+{
+    "className" : "Instance",
+    "fields" : {
+        "id" : {
+            "path" : ["$.InstanceId"]
+        },
+        "region" : {
+            "path" : "$.Placement.AvailabilityZone"
+        },
+        "instanceType" : {
+            "path" : "$.InstanceType"
+        }
+    }
+}

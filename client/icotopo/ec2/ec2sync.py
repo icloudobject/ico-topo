@@ -2,71 +2,49 @@
 This aws client will read the aws_resource configuration and post all the
 resource data to CMS in a batch mode.
 '''
-import sys
-import awscli.clidriver
-from StringIO import StringIO
 from jsonpath_rw import jsonpath, parse
 import json
 import unicodedata
 import os
-import inspect
 import logging
 from  icotopo.yidbclient.client import YidbClient
+from icotopo.awsclient.client import AwsClient
 
 class EC2TopoSync ():
 
-    def __init__(self, endpoint, repo=None, key=None,secret=None):
+    def __init__(self, endpoint, config_path, repo=None, key=None, secret=None):
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
-        self.driver = awscli.clidriver.create_clidriver()
         self.endpoint = endpoint
         self.repo = repo
         self.yidb = YidbClient(endpoint)
+        self.aws = AwsClient()
 
-        # load the command definition
-        path = os.path.dirname(inspect.getfile(self.__class__))
-
-        resource_str = open(path + '/resource.json').read()
+        resource_str = open(config_path + '/resource.json').read()
         self.resources = json.loads(resource_str)
         self.regions = []
         if (key):
             os.environ["AWS_ACCESS_KEY_ID"] = key
             os.environ["AWS_SECRET_ACCESS_KEY"] = secret
+        if os.environ["AWS_ACCESS_KEY_ID"] == None:
+            exit("No AWS_ACCESS_KEY_ID defined")
         self.regions = self.get_region()
+        print(self.regions)
 
     def u2s(self, unicode):
         "convert unicode string to string"
         return unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
 
-    def call_cli(self, args):
-        "call aws cli to execuate the args command"
-        result_string = ""
-        try:
-            old_stdout = sys.stdout
-            result = StringIO()
-            sys.stdout = result
-            self.driver.main(args)
-            sys.stdout = old_stdout
-            result_string = result.getvalue()
-        except:
-            print "Unexpected error:", sys.exc_info()[0]
-        finally:
-            if result_string == "":
-                return {}
-            else:
-                return json.loads(result_string)
-
     def get_region(self):
         "get all ec2 regions"
         args = ['ec2','describe-regions']
-        return self.call_cli(args)
+        return self.aws.call_cli(args)
 
     def process_object(self, class_name, json_array):
         "process on one object in the cloud, post to CMS"
         if (len(json_array) == 0):
             return
-        return self.yidb.post_topo_resource(self.repo, class_name, json_array, "ec2")
-
+        return self.yidb.post_service_model(self.repo, class_name, json_array, "ec2")
 
         self.logger.info(str(r.json()))
         return r.json()
@@ -75,7 +53,7 @@ class EC2TopoSync ():
         "process on one class"
         args1 = list(args)
         while True:
-            response_json = self.call_cli(args1)
+            response_json = self.aws.call_cli(args1)
             if (listPath):
                 jsonpath_expr = parse(listPath[0])
                 node_list = jsonpath_expr.find(response_json)
