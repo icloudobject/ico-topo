@@ -1,0 +1,17 @@
+{
+    "className" : "Instance",
+    "fields" : {
+        "id" : {
+            "path" : ["$.InstanceId"],
+            "dataType" : "string"
+        },
+        "region" : {
+            "path" : "$.Placement.AvailabilityZone",
+            "dataType" : "string"
+        },
+        "instanceType" : {
+            "path" : "$.InstanceType",
+            "dataType" : "string"
+        }
+    }
+}
