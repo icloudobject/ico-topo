@@ -42,8 +42,8 @@ class S3BillingSync ():
         if (key):
             os.environ["AWS_ACCESS_KEY_ID"] = key
             os.environ["AWS_SECRET_ACCESS_KEY"] = secret
-        if os.environ["AWS_ACCESS_KEY_ID"] == None:
-            exit("No AWS_ACCESS_KEY_ID defined")
+        if not "AWS_ACCESS_KEY_ID" in os.environ:
+            exit("No AWS_ACCESS_KEY_ID defined in env")
 
     def u2s(self, unicode):
         "convert unicode string to string"
