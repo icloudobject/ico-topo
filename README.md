@@ -2,7 +2,7 @@ ico-topo
 ========
 This project injects the EC2 topology into YiDB/MongoDB. 
 
-EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) is converted into YiDB data graph using configuration mapping files defined in aws/mapping folder. 
+EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) is converted into YiDB data graph using configuration mapping files defined in config folder. 
 
 ## How it works?
 
@@ -57,7 +57,7 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         cd server
         mvn jettry:run
 
-2. Init the ico client
+2. Init the ico client and run ec2 sync and s3 sync
    
         set environment variable for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
         cd client
