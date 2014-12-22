@@ -35,15 +35,9 @@ class S3BillingSync ():
         self.yidb = YidbClient(endpoint)
         self.config_path = config_path
         self.regions = []
-        self.aws = AwsClient()
+        self.aws = AwsClient(key, secret)
         resource_str = open(config_path + '/resource.json').read()
         self.resources = json.loads(resource_str)
-
-        if (key):
-            os.environ["AWS_ACCESS_KEY_ID"] = key
-            os.environ["AWS_SECRET_ACCESS_KEY"] = secret
-        if not "AWS_ACCESS_KEY_ID" in os.environ:
-            exit("No AWS_ACCESS_KEY_ID defined in env")
 
     def u2s(self, unicode):
         "convert unicode string to string"

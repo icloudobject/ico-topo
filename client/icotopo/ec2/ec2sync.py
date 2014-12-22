@@ -9,6 +9,7 @@ import os
 import logging
 from  icotopo.yidbclient.client import YidbClient
 from icotopo.awsclient.client import AwsClient
+import threading
 
 class EC2TopoSync ():
 
@@ -18,18 +19,13 @@ class EC2TopoSync ():
         self.endpoint = endpoint
         self.repo = repo
         self.yidb = YidbClient(endpoint)
-        self.aws = AwsClient()
+        self.aws = AwsClient(key, secret)
 
         resource_str = open(config_path + '/resource.json').read()
         self.resources = json.loads(resource_str)
         self.regions = []
-        if (key):
-            os.environ["AWS_ACCESS_KEY_ID"] = key
-            os.environ["AWS_SECRET_ACCESS_KEY"] = secret
-        if not "AWS_ACCESS_KEY_ID" in os.environ:
-            exit("No AWS_ACCESS_KEY_ID defined in env")
+
         self.regions = self.get_region()
-        print(self.regions)
 
     def u2s(self, unicode):
         "convert unicode string to string"
