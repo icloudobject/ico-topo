@@ -57,7 +57,7 @@ class S3BillingSync ():
                     num = int(numstr)
         local_file = "/tmp/" + file[:len(file)-4]
         args = ['s3','cp', "s3://" + self.bucket + "/" + file, local_file]
-        #r = self.aws.call_cli(args)
+        r = self.aws.call_cli(args)
         self.unzip("/tmp/" + file, "/tmp")
         lines = reversed(open(local_file).readlines())
         content = [x.strip('\n') for x in lines]
