@@ -56,7 +56,7 @@ class S3BillingSync ():
                     file = items[3]
                     num = int(numstr)
         local_file = "/tmp/" + file[:len(file)-4]
-        args = ['s3','cp', "s3://" + self.bucket + "/" + file, local_file]
+        args = ['s3','cp', "s3://" + self.bucket + "/" + file, "/tmp"]
         r = self.aws.call_cli(args)
         self.unzip("/tmp/" + file, "/tmp")
         lines = reversed(open(local_file).readlines())
@@ -77,8 +77,6 @@ class S3BillingSync ():
                     if (response.status_code != 200):
                         exit(response.content)
                     else:
-                        if ("UPDATED" in response.content):
-                            print("Reach previous inserted line item, break here")
-                            break
+                        print(response.content)
 
 

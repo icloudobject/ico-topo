@@ -160,23 +160,24 @@ public class EntityResource extends
                         metadata, objectId, priority, consistPolicy,
                         payload.toString(), modeVal, request);
                 if (r.getStatus() == 200) {
-                    status = "INSERTED";
+                    status = "UPDATED";
                 } else {
-                    status = "INSERT_FAIL";
+                    status = "UPDATE_FAIL";
                 }
             } catch (Exception e) {
                 return "Error when modify " + className + " for " + objectId
                         + " message is:" + e.getMessage();
             }
         } else {
+            payload.put("_oid", objectId);
             try {
                 Response r = super.createEntity(uriInfo, reponame, branch,
                         className, priority, consistPolicy, payload.toString(),
                         modeVal, request);
                 if (r.getStatus() == 200) {
-                    status = "UPDATED";
+                    status = "INSERTED";
                 } else {
-                    status = "UPDATE_FAIL";
+                    status = "INSERT_FAIL";
                 }
             } catch (Exception e) {
                 return "Error when create " + className + " for " + objectId
