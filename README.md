@@ -1,6 +1,6 @@
 ico-topo
 ========
-This project injects the EC2 topology into YiDB (yidb.org)/MongoDB to create a graph view of your whole data center. It is intended to be a reference application on how to use YiDB. It is also an alternative of Amazon config (aws.amazon.com/config).
+This project injects the EC2 configuration topology into YiDB (yidb.org)/MongoDB to create a graph view of your whole data center. It is intended to be a reference application on how to use YiDB. It is also an alternative of Amazon config (aws.amazon.com/config).
 
 EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) is converted into YiDB data graph using configuration mapping files defined in config folder. 
 
