@@ -67,6 +67,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         python ec2.py
         python s3.py
 
-3. Browse the inserted ec2 instances at: http://localhost:9090/cms/repositories/topocms/branches/main/Instance
+3. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
 
   
