@@ -1,6 +1,6 @@
 """
 This is a very simple Python interface to YiDB Service using requests
-www.yidg.org
+www.yidb.org
 """
 
 import requests
@@ -50,6 +50,10 @@ class YidbClient ():
         else:
             return requests.post(url,data=json.dumps(payload), headers=headers)
 
+    def delete(self, repo, class_name, oid):
+        response = requests.delete(self.endpoint + "/repositories/" + repo + "/branches/main/" + class_name + "/" + oid)
+        return response
+
     def upsert_metadata(self, repo,class_name, payload):
         "check to see if Mapping schema had been defined"
         response = requests.get(self.endpoint + "/repositories/" + repo + "/metadata/" + class_name)
@@ -97,7 +101,7 @@ class YidbClient ():
         "query the repo using YiDB query syntax"
         query = urllib.quote_plus(query)
         query = query.replace("+","%20")
-        url = self.endpoint + "/repositoies/" + repo + "/branches/main/query/" + query + "?allowFullTableScan=True&maxFetch=200000"
+        url = self.endpoint + "/repositories/" + repo + "/branches/main/query/" + query + "?allowFullTableScan=True&maxFetch=200000"
         return requests.get(url)
 
     def enable_delete(self):

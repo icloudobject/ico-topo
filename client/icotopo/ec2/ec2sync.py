@@ -40,7 +40,7 @@ class EC2TopoSync ():
         "process on one object in the cloud, post to CMS"
         if (len(json_array) == 0):
             return
-        return self.yidb.post_service_model(self.repo, class_name, json_array, "ec2")
+        r = self.yidb.post_service_model(self.repo, class_name, json_array, "ec2")
 
         self.logger.info(str(r.json()))
         return r.json()

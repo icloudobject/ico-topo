@@ -10,6 +10,7 @@ import re
 import zipfile,os.path
 from icotopo.yidbclient.client import YidbClient
 from icotopo.awsclient.client import AwsClient
+import datetime
 
 class S3BillingSync ():
 
@@ -25,15 +26,17 @@ class S3BillingSync ():
                     path = os.path.join(path, word)
                 zf.extract(member, path)
 
-    def __init__(self, endpoint, config_path, bucket=None, repo=None, key=None,secret=None):
+    def __init__(self, endpoint, config_path, bucket=None, repo=None, keep_days=90, key=None,secret=None):
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         self.driver = awscli.clidriver.create_clidriver()
         self.endpoint = endpoint
         self.bucket = bucket
         self.repo = repo
-        self.yidb = YidbClient(endpoint)
         self.config_path = config_path
+        self.keep_days = keep_days
+
+        self.yidb = YidbClient(endpoint)
         self.regions = []
         self.aws = AwsClient(key, secret)
         resource_str = open(config_path + '/resource.json').read()
@@ -78,5 +81,16 @@ class S3BillingSync ():
                         exit(response.content)
                     else:
                         print(response.content)
+
+            # remove records days ago
+            days = datetime.date.today() - datetime.timedelta(self.keep_days)
+            unix_time= long(days.strftime("%s")) * 1000
+            query = class_name + "[@_createtime < date(" + str(unix_time) + ")]"
+            response = self.yidb.query(self.repo, query)
+            if (response.status_code == 200):
+                obj_list = response.json()['result']
+                for obj in obj_list:
+                    self.yidb.delete(self.repo, class_name, obj['_oid'])
+
 
 
