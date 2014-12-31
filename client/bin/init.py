@@ -15,10 +15,19 @@ import unicodedata
 import logging
 
 from icotopo.yidbclient.client import YidbClient
+import os
 
 def u2s(unicode):
     "convert unicode string to string"
     return unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
+
+def save_metadata(repo, class_name, metadata):
+    dir_name = "../generated/" + repo
+    if (not os.path.isdir(dir_name)):
+        os.makedirs(dir_name)
+    file = dir_name + "/" + class_name + ".json"
+    with open(file, 'w') as outfile:
+        json.dump(metadata,outfile, sort_keys=True, indent=4)
 
 def mapping2metadata(yidb, repo, mapping):
     "convert the mapping to CMS metadata"
@@ -97,6 +106,8 @@ def main():
             logging.info("insert metadata for repo:" + topo_repo)
             metadata = mapping2metadata(yidb, topo_repo, mapping_json)
             response = yidb.upsert_metadata(topo_repo, class_name, metadata)
+            if (response.status_code == 200):
+                save_metadata(topo_repo, class_name, metadata)
             logging.info("response status:" + str(response.status_code) + " content:" + response.content)
 
 if __name__ == '__main__':
