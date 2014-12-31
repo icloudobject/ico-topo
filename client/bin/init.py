@@ -81,12 +81,12 @@ def main():
 
     # loop through each sub directory that having mapping folder
     # load the mapping, create topo_repo and load the meta data
+
     for client_id in ['ec2','s3']:
         # create topo repo
         client_config = json.load(open("../config/" + client_id + "/config.json"))
         topo_repo = client_config['topo_repo']
         yidb.upsert_repo(topo_repo)
-        yidb.delete_all_metadata(topo_repo)
 
         # for each class, load the mapping and also load the metadata
         resource_config = json.load(open("../config/" + client_id + "/resource.json"))
@@ -108,7 +108,9 @@ def main():
             response = yidb.upsert_metadata(topo_repo, class_name, metadata)
             if (response.status_code == 200):
                 save_metadata(topo_repo, class_name, metadata)
-            logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+                logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+            else:
+                logging.error(response.content)
 
 if __name__ == '__main__':
     main()

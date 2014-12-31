@@ -42,7 +42,7 @@ class EC2TopoSync ():
             return
         r = self.yidb.post_service_model(self.repo, class_name, json_array, "ec2")
 
-        self.logger.info(str(r.json()))
+        self.logger.info(r.content)
         return r.json()
 
     def process_class(self, class_name, args, listPath=None):

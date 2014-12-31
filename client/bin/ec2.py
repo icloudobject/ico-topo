@@ -28,4 +28,5 @@ def sync():
 
 while (True):
     sync()
-    time.sleep(sync_minutes * 60)
+    interval = sync_minutes * 60
+    time.sleep(interval)
