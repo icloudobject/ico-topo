@@ -4,8 +4,15 @@
         "id" : {
             "path" : ["$.InstanceId"]
         },
-        "region" : {
-            "path" : "$.Placement.AvailabilityZone"
+        "instanceId" : {
+            "path" : "$.InstanceId"
+        },
+        "availabilityZone" : {
+            "path" : "$.Placement.AvailabilityZone",
+            "class" : "AvailabilityZone"
+        },
+        "state" : {
+            "path" : "$.State.Name"
         },
         "instanceType" : {
             "path" : "$.InstanceType"
