@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -155,7 +156,8 @@ public class EntityResource extends
                 }
             } else if (dataType!= null && dataType.equals("date")) {
                 String dateFormat = attrDef.getString("dateFormat");
-                DateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
+                DateFormat format = new SimpleDateFormat(dateFormat);
+                format.setTimeZone(TimeZone.getTimeZone("GMT"));  
                 try {
                     Date date = format.parse(value.toString());
                     Calendar c = Calendar.getInstance();
