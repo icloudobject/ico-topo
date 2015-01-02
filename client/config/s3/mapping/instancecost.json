@@ -17,6 +17,8 @@
             "path" : "$.Rate"
         },
         "usageStartDate" : {
+            "dataType" : "date",
+            "dateFormat": "yyyy-MM-dd HH:mm:ss",
             "path" : "$.UsageStartDate"
         }
     }

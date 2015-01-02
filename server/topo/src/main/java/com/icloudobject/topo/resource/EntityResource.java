@@ -3,8 +3,14 @@
  */
 package com.icloudobject.topo.resource;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +101,7 @@ public class EntityResource extends
 
             BasicDBObject attrDef = (BasicDBObject) entry.getValue();
             String refClassName = attrDef.getString("class");
+            String dataType = attrDef.getString("dataType");
             Object pathObj = attrDef.get("path");
             Object value = null;
             if (attrName.equals("id")) {
@@ -146,6 +153,21 @@ public class EntityResource extends
                                 + value + " message is:" + e.getMessage();
                     }
                 }
+            } else if (dataType!= null && dataType.equals("date")) {
+                String dateFormat = attrDef.getString("dateFormat");
+                DateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
+                try {
+                    Date date = format.parse(value.toString());
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(date);
+                    long time = c.getTimeInMillis();
+                    
+                    payload.put(attrName, time);
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             } else {
                 payload.put(attrName, value);
             }
@@ -160,13 +182,12 @@ public class EntityResource extends
                         metadata, objectId, priority, consistPolicy,
                         payload.toString(), modeVal, request);
                 if (r.getStatus() == 200) {
-                    status = "UPDATED";
+                    status = objectId + " UPDATED_OK";
                 } else {
-                    status = "UPDATE_FAIL";
+                    status = objectId + " UPDATE_FAIL";
                 }
             } catch (Exception e) {
-                return "Error when modify " + className + " for " + objectId
-                        + " message is:" + e.getMessage();
+                status = objectId + " UpdateException:" + e.getMessage();
             }
         } else {
             payload.put("_oid", objectId);
@@ -175,13 +196,13 @@ public class EntityResource extends
                         className, priority, consistPolicy, payload.toString(),
                         modeVal, request);
                 if (r.getStatus() == 200) {
-                    status = "INSERTED";
+                    status = objectId + " INSERTED_OK";
                 } else {
-                    status = "INSERT_FAIL";
+                    status = objectId + " INSERT_FAIL";
                 }
             } catch (Exception e) {
-                return "Error when create " + className + " for " + objectId
-                        + " message is:" + e.getMessage();
+                status = objectId + " InsertException:" + e.getMessage();
+
             }
         }
         return status;

@@ -18,16 +18,16 @@ clouds = []
 if (response.status_code == 200):
     clouds = response.json()['result']
 
-def sync():
+def sync(overwrite):
     if clouds and len(clouds) > 0:
         for cloud in clouds:
             topo_sync = S3BillingSync(config['cms_endpoint'],  "../config/s3", cloud['billingDataBucketName'], cloud['topoRepoName'], keep_days, cloud['accessKey'], cloud['accessSecret'])
-            topo_sync.sync()
+            topo_sync.sync(overwrite)
     else:
         topo_sync = S3BillingSync(config['cms_endpoint'],  "../config/s3", config['billing_bucket_name'], config['topo_repo'], keep_days)
-        topo_sync.sync()
+        topo_sync.sync(overwrite)
 
 
 while (True):
-    sync()
+    sync(False)
     time.sleep(int(sync_minutes) * 60)

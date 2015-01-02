@@ -46,7 +46,7 @@ class S3BillingSync ():
         "convert unicode string to string"
         return unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
 
-    def sync(self):
+    def sync(self,overwrite=None):
         "sync billing line item for Instance usage"
         args = ['s3', 'ls', self.bucket]
         r = self.aws.call_cli(args)
@@ -79,6 +79,11 @@ class S3BillingSync ():
                     response = self.yidb.post_service_model(self.repo,class_name,[row], 's3')
                     if (response.status_code != 200):
                         exit(response.content)
+                    elif "UPDATED_OK" in response.content:
+                        if (overwrite == None or overwrite == False):
+                            break
+                        else:
+                            print(response.content)
                     else:
                         print(response.content)
 
