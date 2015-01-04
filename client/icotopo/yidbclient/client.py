@@ -101,7 +101,7 @@ class YidbClient ():
         "query the repo using YiDB query syntax"
         query = urllib.quote_plus(query)
         query = query.replace("+","%20")
-        url = self.endpoint + "/repositories/" + repo + "/branches/main/query/" + query + "?allowFullTableScan=True&maxFetch=200000&" + query_param
+        url = self.endpoint + "/repositories/" + repo + "/branches/main/query/" + query + "?allowFullTableScan=True&maxFetch=200000&" + str(query_param)
         return requests.get(url)
 
     def enable_delete(self):
