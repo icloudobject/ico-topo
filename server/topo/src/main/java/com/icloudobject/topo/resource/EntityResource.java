@@ -155,21 +155,8 @@ public class EntityResource extends
                     }
                 }
             } else if (dataType!= null && dataType.equals("date")) {
-                String dateFormat = attrDef.getString("dateFormat");
-                DateFormat format = new SimpleDateFormat(dateFormat);
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));  
-                try {
-                    Date date = format.parse(value.toString());
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(date);
-                    long time = c.getTimeInMillis();
-                    
-                    payload.put(attrName, time);
-                } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
+                long time = Long.parseLong(value.toString());
+                payload.put(attrName, time);   
             } else {
                 payload.put(attrName, value);
             }
