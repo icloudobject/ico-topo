@@ -70,7 +70,7 @@ class YidbClient ():
 
     def upsert_object(self, repo, class_name, payload):
         "upsert an object into repo"
-        url = self.endpoint + "/repositories/" + repo + "/branches/main/" + class_name + "/" + payload['_oid']
+        url = self.endpoint + "/repositories/" + repo + "/branches/main/" + class_name + "/" + urllib.quote_plus(payload['_oid']).replace("+","%20")
         response = requests.get(url)
         if (response.status_code != 200):
             url = self.endpoint + "/repositories/" + repo + "/branches/main/" + class_name
