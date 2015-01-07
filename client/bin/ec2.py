@@ -26,7 +26,8 @@ def sync():
         topo_sync = EC2TopoSync(config['cms_endpoint'], "../config/ec2", config['topo_repo'])
         topo_sync.sync()
 
+interval = sync_minutes * 60
 while (True):
     sync()
-    interval = sync_minutes * 60
+    print "Sleep for " + str(interval) + " seconds"
     time.sleep(interval)

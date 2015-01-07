@@ -27,7 +27,8 @@ def sync(overwrite):
         topo_sync = S3BillingSync(config['cms_endpoint'],  "../config/s3", config['billing_bucket_name'], config['topo_repo'], keep_days)
         topo_sync.sync(overwrite)
 
-
+interval = int(sync_minutes) * 60
 while (True):
     sync(False)
-    time.sleep(int(sync_minutes) * 60)
+    print "Sleep for " + str(interval) + " seconds"
+    time.sleep(interval)
