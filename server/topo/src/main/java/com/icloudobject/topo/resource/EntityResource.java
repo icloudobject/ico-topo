@@ -110,13 +110,14 @@ public class EntityResource extends
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < paths.size(); i++) {
                     try {
-                        String v1 = JsonPath.read(jsonString, (String) paths.get(i));
+                        String v1 = JsonPath.read(jsonString, (String) paths.get(i)).toString();
                         if (sb.length() == 0) {
                             sb.append(v1);
                         } else {
                             sb.append(":").append(v1);
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
                         // pass
                     }
                 }

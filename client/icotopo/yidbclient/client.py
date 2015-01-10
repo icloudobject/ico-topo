@@ -12,6 +12,11 @@ class YidbClient ():
     def __init__(self, endpoint):
         self.endpoint = endpoint
 
+    def delete_metadata(self, repo, class_name):
+        "delete schema definition for the repo"
+        r = requests.delete(self.endpoint + "/repositories/"  + repo + "/metadata/" + class_name)
+        return r
+
     def delete_all_metadata(self, repo):
         "delete all schema definition for the repo"
         response = requests.get(self.endpoint + "/repositories/" + repo + "/metadata").json()
@@ -76,6 +81,11 @@ class YidbClient ():
             url = self.endpoint + "/repositories/" + repo + "/branches/main/" + class_name
         return self.post_change(url,payload)
 
+    def batch_insert(self, repo, payloads):
+        "batch insert objects"
+        url = self.endpoint + "/repositories/" + repo + "/branches/main/entities?failReturnOption=ALL"
+        return self.post_change(url,payloads)
+
     def post_service_model(self, repo, class_name, payload, client_id):
         "upsert a object into repo"
         query_string = {}
@@ -97,10 +107,18 @@ class YidbClient ():
         url = self.endpoint + "/repositories/" + self.repo + "/metadata"
         return requests.get(url)
 
-    def query(self,repo, query, query_param=None):
+    def query(self,repo, query, sort_on=None, sort_order=None, limit=None):
         "query the repo using YiDB query syntax"
         query = urllib.quote_plus(query)
         query = query.replace("+","%20")
+        query_param = ""
+        if sort_on:
+            query_param = "sort=" + sort_on + "&"
+        if sort_order:
+            query_param = query_param + "sortOrder=" + sort_order + "&"
+        if limit:
+            query_param = query_param + "limit=" + str(limit) + "&"
+
         url = self.endpoint + "/repositories/" + repo + "/branches/main/query/" + query + "?allowFullTableScan=True&maxFetch=200000&" + str(query_param)
         return requests.get(url)
 
