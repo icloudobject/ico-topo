@@ -1,0 +1,9 @@
+{
+    "className" : "Region",
+    "fields" : {
+        "id" : {
+            "path" : "$.regionName",
+            "dataType" : "string"
+        }
+    }
+}

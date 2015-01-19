@@ -99,7 +99,9 @@
 					<stopKey>STOP</stopKey>
 					<stopPort>9999</stopPort>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
-					<contextPath>/cms</contextPath>
+					<webApp>
+					<contextPath>/topo</contextPath>
+					</webApp>
 				</configuration>
 			</plugin>
 
