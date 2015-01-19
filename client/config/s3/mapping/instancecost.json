@@ -1,0 +1,24 @@
+{
+    "className" : "InstanceCost",
+    "fields" : {
+        "id" : {
+            "path" : ["$.ResourceId","$.UsageStartDate"]
+        },
+        "instanceId" : {
+            "path" : "$.ResourceId"
+        },
+        "reserved" : {
+            "path" : "$.ReservedInstance"
+        },
+        "cost" : {
+            "path" : "$.Cost"
+        },
+        "rate" : {
+            "path" : "$.Rate"
+        },
+        "usageStartDate" : {
+            "dataType" : "date",
+            "path" : "$.UsageStartDate"
+        }
+    }
+}

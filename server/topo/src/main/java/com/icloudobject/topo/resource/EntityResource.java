@@ -3,9 +3,16 @@
  */
 package com.icloudobject.topo.resource;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -28,6 +35,7 @@ import com.ebay.cloud.cms.query.service.QueryContext;
 import com.ebay.cloud.cms.sysmgmt.priority.CMSPriority;
 import com.ebay.cloud.cms.sysmgmt.server.CMSServer;
 import com.jayway.jsonpath.JsonPath;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 import net.minidev.json.JSONArray;
@@ -93,11 +101,42 @@ public class EntityResource extends
             String attrName = entry.getKey();
 
             BasicDBObject attrDef = (BasicDBObject) entry.getValue();
-            String path = attrDef.getString("path");
             String refClassName = attrDef.getString("class");
-
-            Object value = JsonPath.read(jsonString, path);
+            String dataType = attrDef.getString("dataType");
+            Object pathObj = attrDef.get("path");
+            Object value = null;
             if (attrName.equals("id")) {
+                BasicDBList paths = (BasicDBList) pathObj;
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < paths.size(); i++) {
+                    try {
+                        String v1 = JsonPath.read(jsonString, (String) paths.get(i)).toString();
+                        if (sb.length() == 0) {
+                            sb.append(v1);
+                        } else {
+                            sb.append(":").append(v1);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // pass
+                    }
+                }
+                value = sb.toString();
+            } else {
+                try {
+                    value = JsonPath.read(jsonString, (String) pathObj);
+                } catch (Exception e) {
+                    
+                }
+            }
+            
+            if (value == null) {
+                System.out.println("cannot find value for path:" + pathObj + " from json:" + jsonString);
+            }
+            if (attrName.equals("id")) {
+                if (value == null) {
+                    return "noIdFound";
+                }
                 objectId = value.toString();
             }
             if (refClassName != null) {
@@ -116,6 +155,9 @@ public class EntityResource extends
                                 + value + " message is:" + e.getMessage();
                     }
                 }
+            } else if (dataType!= null && dataType.equals("date")) {
+                long time = Long.parseLong(value.toString());
+                payload.put(attrName, time);   
             } else {
                 payload.put(attrName, value);
             }
@@ -123,28 +165,37 @@ public class EntityResource extends
         if (objectId == null) {
             return "objectIdIsNull";
         }
+        String status = "FAIL";
         if (existObject(reponame, className, objectId)) {
             try {
                 Response r = super.modifyEntity(uriInfo, reponame, branch,
                         metadata, objectId, priority, consistPolicy,
                         payload.toString(), modeVal, request);
-                System.out.println(r.getStatus());
+                if (r.getStatus() == 200) {
+                    status = objectId + " UPDATED_OK";
+                } else {
+                    status = objectId + " UPDATE_FAIL";
+                }
             } catch (Exception e) {
-                return "Error when modify " + className + " for " + objectId
-                        + " message is:" + e.getMessage();
+                status = objectId + " UpdateException:" + e.getMessage();
             }
         } else {
+            payload.put("_oid", objectId);
             try {
                 Response r = super.createEntity(uriInfo, reponame, branch,
                         className, priority, consistPolicy, payload.toString(),
                         modeVal, request);
-                System.out.println(r.getStatus());
+                if (r.getStatus() == 200) {
+                    status = objectId + " INSERTED_OK";
+                } else {
+                    status = objectId + " INSERT_FAIL";
+                }
             } catch (Exception e) {
-                return "Error when create " + className + " for " + objectId
-                        + " message is:" + e.getMessage();
+                status = objectId + " InsertException:" + e.getMessage();
+
             }
         }
-        return "OK";
+        return status;
     }
 
     private boolean existObject(String repo, String className, String id) {

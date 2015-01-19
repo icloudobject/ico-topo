@@ -1,0 +1,5 @@
+[
+    {"useRegion" : true, "className": "Instance", "command": "describe-instances", "max-items" : 1, "listPath" : ["$.Reservations","$.Instances"]},
+    {"useRegion" : false, "className": "Region", "command": "describe-regions","listPath" : ["$.Regions"]},
+    {"useRegion" : true, "className": "AvailabilityZone", "command": "describe-availability-zones", "listPath" : ["$.AvailabilityZones"]}
+]

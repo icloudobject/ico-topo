@@ -1,0 +1,8 @@
+{
+    "className" : "Region",
+    "fields" : {
+        "id" : {
+            "path" : ["$.RegionName"]
+        }
+    }
+}
