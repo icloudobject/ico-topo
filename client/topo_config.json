@@ -1,4 +1,0 @@
-{
-    "cms_endpoint" : "http://localhost:9090/cms/repositories/",
-    "topo_config_repo" : "topoconfig"
-}

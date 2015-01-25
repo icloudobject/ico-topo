@@ -86,7 +86,8 @@ def main():
         # create topo repo
         client_config = json.load(open("../config/" + client_id + "/config.json"))
         topo_repo = client_config['topo_repo']
-        yidb.upsert_repo(topo_repo)
+        r = yidb.upsert_repo(topo_repo)
+        logging.info("response status for upsert repo:" + topo_repo + " response:" + response.content)
 
         # for each class, load the mapping and also load the metadata
         resource_config = json.load(open("../config/" + client_id + "/resource.json"))

@@ -1,6 +1,4 @@
-__author__ = 'bw'
-'''
-This aws client will read the aws_resource configuration and post all the
+''' aws client will read the aws_resource configuration and post all the
 resource data to CMS in a batch mode.
 '''
 import sys
