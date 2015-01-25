@@ -57,7 +57,17 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         cd server
         mvn jetty:run
 
-2. Init the ico client and run ec2 sync and s3 sync
+2. Install AWS python client with
+
+pip install awscli
+
+and create a file called "config" under ~/.aws with the following content
+
+[default]
+output = json
+region = us-west-2
+
+3. Init the ico client and run ec2 sync and s3 sync
    
         set environment variable for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
         cd client
@@ -67,6 +77,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         python ec2.py
         python s3.py
 
-3. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
+4. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
 
   
