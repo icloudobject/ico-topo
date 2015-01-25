@@ -55,7 +55,7 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
 1. Run ico-topo server
 
         cd server
-        mvn jettry:run
+        mvn jetty:run
 
 2. Init the ico client and run ec2 sync and s3 sync
    
