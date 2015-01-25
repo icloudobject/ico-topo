@@ -1,14 +1,19 @@
 __author__ = 'icloudobject'
 
+
 import json
 from icotopo.yidbclient.client import YidbClient
 from icotopo.s3.s3sync import S3BillingSync
 import time
 
+'''
+If the keys are stored in CloudConfig class in ICO repo, get the keys from there,
+otherwise, load from config
+'''
 config = json.load(open("../config/s3/config.json"))
 query = 'CloudConfig[@cloudName="aws"]{@accessKey,@accessSecret,@topoRepoName}'
 yidb = YidbClient(config['cms_endpoint'])
-response = yidb.query("topoconfig",query)
+response = yidb.query('ico',query)
 sync_minutes = config['sync_minutes']
 keep_days = config['keep_days']
 if sync_minutes <= 0:

@@ -5,11 +5,15 @@ from icotopo.yidbclient.client import YidbClient
 from icotopo.ec2.ec2sync import EC2TopoSync
 import time
 
+'''
+If the keys are stored in CloudConfig class in ICO repo, get the keys from there,
+otherwise, load from config
+'''
 config = json.load(open("../config/ec2/config.json"))
 "get the list of cloud config info from ico repo"
 query = 'CloudConfig[@cloudName="aws"]{@accessKey,@accessSecret,@topoRepoName}'
 yidb = YidbClient(config['cms_endpoint'])
-response = yidb.query("topoconfig",query)
+response = yidb.query("ico",query)
 clouds = []
 if (response.status_code == 200):
     clouds = response.json()['result']
