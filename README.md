@@ -59,7 +59,7 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         pip install awscli
 
    Follow AWS CLI docs to configure the credentials, default region and output format: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
-   The output format must be set as 'json'
+   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be configured correctly and the output format must be set as 'json'.
 
         [default]
         output = json
@@ -67,7 +67,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
 
 3. Init the ico client and run ec2 sync and s3 sync
    
-        set environment variable for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
         cd client
         python setup.py install	
         cd bin
@@ -76,5 +75,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         python s3.py
 
 4. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
+
 
   
