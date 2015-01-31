@@ -77,6 +77,43 @@ class EC2TopoSync ():
     def sync(self):
         for resource in self.resources:
             print resource
+            self.sync_resource(resource)
+
+    def sync_resource(self, resource, resource_id=None, region=None):
+        args = ['ec2']
+        command = str(resource['command'])
+        if ('listPath' in resource):
+            list_path = resource['listPath']
+        else:
+            list_path = None
+        com_args = command.split(" ")
+        args.extend(com_args)
+        if ('max-items' in resource):
+            args.append("--max-items")
+            args.append(str(resource['max-items']))
+
+        if (resource['useRegion']):
+            for region in self.regions['Regions']:
+                r_args = list(args)
+                r_args.append("--region")
+                if (region):
+                    region_name = region
+                else:
+                    region_name = self.u2s(region['RegionName'])
+                r_args.append(region_name)
+                if (resource_id):
+                    r_args.append("--" + resource['id_name'])
+                    r_args.append(resource_id)
+
+                self.process_class(resource['className'], r_args, list_path)
+        else:
+            self.process_class(resource['className'], args, list_path)
+
+    def refresh(self, clsss_name, object_id):
+        for resource in self.resources:
+            if (resource['className'] != clsss_name):
+                continue
+
             args = ['ec2']
             command = str(resource['command'])
             if ('listPath' in resource):
@@ -98,4 +135,3 @@ class EC2TopoSync ():
                     self.process_class(resource['className'], r_args, list_path)
             else:
                 self.process_class(resource['className'],args, list_path)
-
