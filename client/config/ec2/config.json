@@ -1,5 +1,5 @@
 {
-    "cms_endpoint" : "http://localhost:8080/topo",
+    "cms_endpoint" : "http://localhost:9090/topo",
     "topo_repo" : "topodemo",
     "sync_minutes" : 5
 }

@@ -31,7 +31,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
                 }
         }
         
-        
 3. The result model in YiDB graph representation will be the following JSON objects:
         
         AvailabilityZone:
@@ -48,8 +47,6 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         }
 
 
-
-
 ## Steps to run ico-topo at your local environment
 
 1. Run ico-topo server
@@ -59,17 +56,17 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
 
 2. Install AWS python client with
 
-pip install awscli
+        pip install awscli
 
-and create a file called "config" under ~/.aws with the following content
+   Follow AWS CLI docs to configure the credentials, default region and output format: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be configured correctly and the output format must be set as 'json'.
 
-[default]
-output = json
-region = us-west-2
+        [default]
+        output = json
+        region = us-west-2
 
 3. Init the ico client and run ec2 sync and s3 sync
    
-        set environment variable for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
         cd client
         python setup.py install	
         cd bin
@@ -78,5 +75,6 @@ region = us-west-2
         python s3.py
 
 4. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
+
 
   
