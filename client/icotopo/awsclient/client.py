@@ -19,16 +19,24 @@ class AwsClient:
     def call_cli(self, args):
         "call aws cli to execuate the args command"
         result_string = ""
+        err_result_string = ""
         try:
             old_stdout = sys.stdout
+            old_stderr = sys.stderr
             result = StringIO()
             sys.stdout = result
+            err_result = StringIO()
+            sys.stderr = err_result
             self.driver.main(args)
             sys.stdout = old_stdout
+            sys.stderr = old_stderr
             result_string = result.getvalue()
+            err_result_string = err_result.getvalue()
         except:
             print "Unexpected error:", sys.exc_info()[0]
         finally:
+            if (result_string == "" and err_result_string != ""):
+                return err_result_string
             if result_string == "":
                 return {}
             elif result_string[0] == "{":

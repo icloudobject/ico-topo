@@ -3,6 +3,10 @@
     "fields" : {
         "id" : {
             "path" : ["$.RegionName"]
+        },
+        "cloud" : {
+            "path" : "ROOT",
+            "class" : "Cloud"
         }
     }
 }

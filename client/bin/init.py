@@ -51,6 +51,10 @@ def mapping2metadata(yidb, repo, mapping):
                 field['dataType'] = field_def['dataType']
             else:
                 field['dataType'] = 'string'
+        if ('cardinality' in field_def):
+            if (field_def['cardinality'] == 'many'):
+                field['cardinality'] = "Many"
+
         fields[item] = field
     return metadata
 
@@ -67,7 +71,7 @@ def main():
     yidb = YidbClient(config['cms_endpoint'])
     logging.info("allow metadata delete")
     response = yidb.enable_delete()
-    logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+    logging.info("response status:" + str(response.status_code))
 
     # check to see if repo exists, if not, create the repo
     logging.info("adding new repo if not exists:" + topo_config_repo)
@@ -77,7 +81,7 @@ def main():
     mapping = json.load(open("../config/topo_mapping.json"))
     logging.info("load TopoMapping metadata:" + str(mapping))
     response = yidb.upsert_metadata(topo_config_repo, "TopoMapping", mapping)
-    logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+    logging.info("response status:" + str(response.status_code))
 
     # loop through each sub directory that having mapping folder
     # load the mapping, create topo_repo and load the meta data
@@ -87,7 +91,16 @@ def main():
         client_config = json.load(open("../config/" + client_id + "/config.json"))
         topo_repo = client_config['topo_repo']
         r = yidb.upsert_repo(topo_repo)
-        logging.info("response status for upsert repo:" + topo_repo + " response:" + response.content)
+
+        task_metadata = json.load(open("../config/topo_task.json"))
+        response = yidb.upsert_metadata(topo_repo, "TopoTask", task_metadata)
+        logging.info("response status:" + str(response.status_code))
+
+        tasklog_metadata = json.load(open("../config/topo_task_log.json"))
+        response = yidb.upsert_metadata(topo_repo, "TopoTaskLog", tasklog_metadata)
+        logging.info("response status:" + str(response.status_code))
+
+        logging.info("response status for upsert repo:" + topo_repo)
 
         # for each class, load the mapping and also load the metadata
         resource_config = json.load(open("../config/" + client_id + "/resource.json"))
@@ -102,14 +115,14 @@ def main():
             mapping_payload['mapping'] = mapping_json
             logging.info("insert mapping to TopMapping:" + str(mapping_payload))
             response = yidb.upsert_object(topo_config_repo, "TopoMapping", mapping_payload)
-            logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+            logging.info("response status:" + str(response.status_code))
 
             logging.info("insert metadata for repo:" + topo_repo)
             metadata = mapping2metadata(yidb, topo_repo, mapping_json)
             response = yidb.upsert_metadata(topo_repo, class_name, metadata)
             if (response.status_code == 200):
                 save_metadata(topo_repo, class_name, metadata)
-                logging.info("response status:" + str(response.status_code) + " content:" + response.content)
+                logging.info("response status:" + str(response.status_code))
             else:
                 logging.error(response.content)
 

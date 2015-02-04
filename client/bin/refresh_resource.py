@@ -30,10 +30,10 @@ else:
 
 topo_sync = EC2TopoSync(config['cms_endpoint'], "../config/ec2", cloud['topoRepoName'], cloud['accessKey'], cloud['accessSecret'])
 
-if (resource_id == 'ROOT'):
+if (resource == 'CLOUD'):
     topo_sync.get_region()
 else:
-    topo_sync.sync_resource(resource,resource, resource_id, region_name)
+    topo_sync.sync_resource(resource, resource_id, region_name)
 
 
 

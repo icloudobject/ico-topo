@@ -16,6 +16,15 @@
         },
         "instanceType" : {
             "path" : "$.InstanceType"
+        },
+        "vpc" : {
+            "path" : "$.VpcId",
+            "class" : "Vpc"
+        },
+        "securityGroups" : {
+            "path" : "$.SecurityGroups[*].GroupId",
+            "class" : "SecurityGroup",
+            "cardinality" : "many"
         }
     }
 }

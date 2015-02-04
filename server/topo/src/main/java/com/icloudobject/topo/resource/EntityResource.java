@@ -103,6 +103,7 @@ public class EntityResource extends
             BasicDBObject attrDef = (BasicDBObject) entry.getValue();
             String refClassName = attrDef.getString("class");
             String dataType = attrDef.getString("dataType");
+            String cardinality = attrDef.getString("cardinality");
             Object pathObj = attrDef.get("path");
             Object value = null;
             if (attrName.equals("id")) {
@@ -118,15 +119,19 @@ public class EntityResource extends
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        // pass
                     }
                 }
                 value = sb.toString();
             } else {
                 try {
-                    value = JsonPath.read(jsonString, (String) pathObj);
+                    String pathStr = (String) pathObj;
+                    if (pathStr.startsWith("$")) {
+                        value = JsonPath.read(jsonString, (String) pathObj);
+                    } else {
+                        value = pathStr;
+                    }
                 } catch (Exception e) {
-                    
+                    e.printStackTrace();
                 }
             }
             
@@ -140,24 +145,36 @@ public class EntityResource extends
                 objectId = value.toString();
             }
             if (refClassName != null) {
-                JSONObject refObj = new JSONObject();
-                refObj.put("_oid", value);
-                refObj.put("_type", refClassName);
-                payload.put(attrName, refObj);
-                if (!existObject(reponame, refClassName, value.toString())) {
-                    String postStr = "{\"_oid\":\"" + value + "\"}";
-                    try {
-                        super.createEntity(uriInfo, reponame, branch,
-                                refClassName, priority, consistPolicy, postStr,
-                                modeVal, request);
-                    } catch (Exception e) {
-                        return "Error when create " + refClassName + " for "
-                                + value + " message is:" + e.getMessage();
-                    }
+                if (cardinality != null && cardinality.equals("many")) {
+                    ArrayList al = new ArrayList();
+                    for (Object v : (List) value) {
+                        JSONObject refObj = new JSONObject();
+                        refObj.put("_oid", v.toString());
+                        refObj.put("_type", refClassName);
+                        al.add(refObj);
+                        upsertObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, v.toString(), modeVal,request);
+                    }              
+                    payload.put(attrName, al);
+                } else {
+                    JSONObject refObj = new JSONObject();
+                    refObj.put("_oid", value);
+                    refObj.put("_type", refClassName);
+                    payload.put(attrName, refObj);
+                    upsertObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, value.toString(), modeVal,request);
                 }
+                
             } else if (dataType!= null && dataType.equals("date")) {
-                long time = Long.parseLong(value.toString());
-                payload.put(attrName, time);   
+                if (cardinality != null && cardinality.equals("many")) {
+                    ArrayList al = new ArrayList();
+                    for (Object v : (List) value) {
+                        long time = Long.parseLong(v.toString());
+                        al.add(time);
+                    }
+                    payload.put(attrName, al);
+                } else {
+                    long time = Long.parseLong(value.toString());
+                    payload.put(attrName, time);
+                }
             } else {
                 payload.put(attrName, value);
             }
@@ -178,6 +195,7 @@ public class EntityResource extends
                 }
             } catch (Exception e) {
                 status = objectId + " UpdateException:" + e.getMessage();
+                e.printStackTrace();
             }
         } else {
             payload.put("_oid", objectId);
@@ -192,7 +210,7 @@ public class EntityResource extends
                 }
             } catch (Exception e) {
                 status = objectId + " InsertException:" + e.getMessage();
-
+                e.printStackTrace();
             }
         }
         return status;
@@ -212,6 +230,27 @@ public class EntityResource extends
         }
     }
 
+    private void upsertObject(UriInfo uriInfo,
+            final String priority,
+            final String consistPolicy,
+            String reponame, 
+            String branch,
+            String refClassName, 
+            String value,
+            String modeVal,
+            HttpServletRequest request) {
+        if (!existObject(reponame, refClassName, value)) {
+            String postStr = "{\"_oid\":\"" + value + "\"}";
+            try {
+                super.createEntity(uriInfo, reponame, branch,
+                        refClassName, priority, consistPolicy, postStr,
+                        modeVal, request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
     @GET
     @Path("/topo/{metadata}")
     public String topoTest(@Context final UriInfo uriInfo,

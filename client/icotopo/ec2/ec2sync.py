@@ -5,11 +5,11 @@ resource data to CMS in a batch mode.
 from jsonpath_rw import jsonpath, parse
 import json
 import unicodedata
-import os
 import logging
-from  icotopo.yidbclient.client import YidbClient
+from icotopo.yidbclient.client import YidbClient
 from icotopo.awsclient.client import AwsClient
-import threading
+import uuid
+import time
 
 class EC2TopoSync ():
 
@@ -36,36 +36,47 @@ class EC2TopoSync ():
         args = ['ec2','describe-regions']
         return self.aws.call_cli(args)
 
-    def process_object(self, class_name, json_array):
+    def process_object(self, region, class_name, json_array):
         "process on one object in the cloud, post to CMS"
         if (len(json_array) == 0):
             return
+        if (region):
+            for j in json_array:
+                j['region'] = region
         r = self.yidb.post_service_model(self.repo, class_name, json_array, "ec2")
 
         self.logger.info(r.content)
         return r.json()
 
-    def process_class(self, class_name, args, listPath=None):
+    def log_call(self, task_id, args, message):
+        payload = {}
+        payload['taskId'] = task_id
+        payload['logTime'] = int(time.time())
+        payload['command'] = str(args)
+        payload['message'] = message
+        r = self.yidb.insert_object(self.repo,"TopoTaskLog",payload)
+        return r
+
+    def process_class(self, task_id, region, class_name, args, listPath=None):
         "process on one class"
         args1 = list(args)
         while True:
             response_json = self.aws.call_cli(args1)
-            if (listPath):
-                jsonpath_expr = parse(listPath[0])
-                node_list = jsonpath_expr.find(response_json)
-                for node in node_list:
-                    response_json = node.value
-                    if (len(listPath )> 1 and len(response_json) > 0):
-                        jsonpath_expr = parse(listPath[1])
-                        for first_node_list in response_json:
-                            node_list2 = jsonpath_expr.find(first_node_list)
-                            for node2 in node_list2:
-                                self.process_object(class_name, node2.value)
-                    else:
-                        self.process_object(class_name, node.value)
-
+            if type(response_json) is dict:
+                self.log_call(task_id, args1, "OK")
             else:
-                self.process_object(class_name, response_json)
+                self.log_call(task_id, args1, response_json)
+                return
+            if response_json == '[]':
+                return
+            if (listPath):
+                jsonpath_expr = parse(listPath)
+                matches = jsonpath_expr.find(response_json)
+                for match in matches:
+                    response_json = match.value
+                    self.process_object(region, class_name, response_json)
+            else:
+                self.process_object(region, class_name, response_json)
 
             if ('NextToken' in response_json):
                 args1 = list(args)
@@ -74,12 +85,28 @@ class EC2TopoSync ():
             else:
                 break
 
-    def sync(self):
+    def sync(self, task_id=None):
+        if (task_id == None):
+            task_id = str(uuid.uuid4())
+        payload = {}
+        payload['taskId'] = task_id
+        payload['clientId'] = "ec2"
+        payload['startTime'] = int(time.time()*1000)
+        r = self.yidb.insert_object(self.repo,"TopoTask",payload)
+
         for resource in self.resources:
             print resource
-            self.sync_resource(resource)
+            self.sync_resource(task_id, resource)
 
-    def sync_resource(self, resource, resource_id=None, region=None):
+        payload = {}
+        payload['taskId'] = task_id
+        payload['status'] = "DONE"
+        payload['clientId'] = "ec2"
+        payload['endTime'] = int(time.time()*1000)
+        r = self.yidb.insert_object(self.repo,"TopoTask",payload)
+
+
+    def sync_resource(self, task_id, resource, region=None, resource_id=None):
         args = ['ec2']
         command = str(resource['command'])
         if ('listPath' in resource):
@@ -92,19 +119,21 @@ class EC2TopoSync ():
             args.append("--max-items")
             args.append(str(resource['max-items']))
 
-        if (resource['useRegion']):
-            for region in self.regions['Regions']:
+        if (region == None):
+            regions = self.regions['Regions']
+        else:
+            regions = [{"RegionName" : region}]
+        if 'useRegion' in resource and resource['useRegion']:
+            for region in regions:
                 r_args = list(args)
                 r_args.append("--region")
-                if (region):
-                    region_name = region
-                else:
-                    region_name = self.u2s(region['RegionName'])
+                region_name = self.u2s(region['RegionName'])
                 r_args.append(region_name)
                 if (resource_id):
                     r_args.append("--" + resource['id_name'])
                     r_args.append(resource_id)
 
-                self.process_class(resource['className'], r_args, list_path)
+                self.process_class(task_id, region_name, resource['className'], r_args, list_path)
         else:
-            self.process_class(resource['className'], args, list_path)
+            self.process_class(task_id, None, resource['className'], args, list_path)
+
