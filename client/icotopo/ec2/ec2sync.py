@@ -34,7 +34,9 @@ class EC2TopoSync ():
     def get_region(self):
         "get all ec2 regions"
         args = ['ec2','describe-regions']
-        return self.aws.call_cli(args)
+        regions = self.aws.call_cli(args)
+        regions['Regions'].pop(0)
+        return regions
 
     def process_object(self, region, class_name, json_array):
         "process on one object in the cloud, post to CMS"
@@ -85,7 +87,7 @@ class EC2TopoSync ():
             else:
                 break
 
-    def sync(self, task_id=None):
+    def sync(self, task_id=None, kick_off=None):
         if (task_id == None):
             task_id = str(uuid.uuid4())
         payload = {}
@@ -93,10 +95,12 @@ class EC2TopoSync ():
         payload['clientId'] = "ec2"
         payload['startTime'] = int(time.time()*1000)
         r = self.yidb.insert_object(self.repo,"TopoTask",payload)
+        init_resource_list = ['Region', 'AvailabilityZone', 'Instance']
 
         for resource in self.resources:
-            print resource
-            self.sync_resource(task_id, resource)
+            if kick_off == None or resource['className'] in init_resource_list:
+                print resource
+                self.sync_resource(task_id, resource)
 
         payload = {}
         payload['taskId'] = task_id
@@ -105,35 +109,42 @@ class EC2TopoSync ():
         payload['endTime'] = int(time.time()*1000)
         r = self.yidb.insert_object(self.repo,"TopoTask",payload)
 
+    def sync_one_resource(self, task_id, resource_type, resource_id, region=None):
+        for resource in self.resources:
+            if (resource['className'] == resource_type):
+                self.sync_resource( task_id, resource, resource_id, region)
 
-    def sync_resource(self, task_id, resource, region=None, resource_id=None):
+
+    def sync_resource(self, task_id, resource_config, resource_id=None, region=None):
         args = ['ec2']
-        command = str(resource['command'])
-        if ('listPath' in resource):
-            list_path = resource['listPath']
+        command = str(resource_config['command'])
+        if ('listPath' in resource_config):
+            list_path = resource_config['listPath']
         else:
             list_path = None
         com_args = command.split(" ")
         args.extend(com_args)
-        if ('max-items' in resource):
+        if ('max-items' in resource_config):
             args.append("--max-items")
-            args.append(str(resource['max-items']))
+            args.append(str(resource_config['max-items']))
 
-        if (region == None):
-            regions = self.regions['Regions']
-        else:
-            regions = [{"RegionName" : region}]
-        if 'useRegion' in resource and resource['useRegion']:
-            for region in regions:
+        if 'useRegion' in resource_config and resource_config['useRegion']:
+            if resource_id != None:
                 r_args = list(args)
                 r_args.append("--region")
-                region_name = self.u2s(region['RegionName'])
-                r_args.append(region_name)
-                if (resource_id):
-                    r_args.append("--" + resource['id_name'])
-                    r_args.append(resource_id)
+                r_args.append(region)
+                r_args.append("--" + resource_config['id_name'])
+                r_args.append(resource_id)
+                self.process_class(task_id, region, resource_config['className'], r_args, list_path)
 
-                self.process_class(task_id, region_name, resource['className'], r_args, list_path)
+            else:
+                for region in self.regions['Regions']:
+                    r_args = list(args)
+                    r_args.append("--region")
+                    region_name = self.u2s(region['RegionName'])
+                    r_args.append(region_name)
+
+                    self.process_class(task_id, region_name, resource_config['className'], r_args, list_path)
         else:
-            self.process_class(task_id, None, resource['className'], args, list_path)
+            self.process_class(task_id, region, resource_config['className'], args, list_path)
 
