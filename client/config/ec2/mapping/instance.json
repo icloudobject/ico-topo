@@ -7,6 +7,9 @@
         "instanceId" : {
             "path" : "$.InstanceId"
         },
+        "region" : {
+            "path" : "region"
+        },
         "availabilityZone" : {
             "path" : "$.Placement.AvailabilityZone",
             "class" : "AvailabilityZone"
