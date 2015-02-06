@@ -95,6 +95,7 @@ class EC2TopoSync ():
         payload['clientId'] = "ec2"
         payload['startTime'] = int(time.time()*1000)
         r = self.yidb.insert_object(self.repo,"TopoTask",payload)
+        task_oid = r.json()['result'][0]
         init_resource_list = ['Region', 'AvailabilityZone', 'Instance']
 
         for resource in self.resources:
@@ -103,11 +104,11 @@ class EC2TopoSync ():
                 self.sync_resource(task_id, resource)
 
         payload = {}
-        payload['taskId'] = task_id
+        payload['_oid'] = task_oid
         payload['status'] = "DONE"
-        payload['clientId'] = "ec2"
         payload['endTime'] = int(time.time()*1000)
-        r = self.yidb.insert_object(self.repo,"TopoTask",payload)
+        r = self.yidb.upsert_object(self.repo,"TopoTask",payload)
+        print(r)
 
     def sync_one_resource(self, task_id, resource_type, resource_id, region=None):
         for resource in self.resources:
