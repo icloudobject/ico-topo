@@ -1,0 +1,53 @@
+{
+        "name": "TopoTask",
+        "description": "The sync task status",
+        "fields": {
+                "taskId" : {
+                        "description":"The task id",
+                        "dataType": "string",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "clientId" : {
+                        "description":"The client id",
+                        "dataType": "string",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "startTime" : {
+                        "description":"The start time of the task",
+                        "dataType": "date",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "endTime" : {
+                        "description":"The end time of the task",
+                        "dataType": "date",
+                        "cardinality": "One",
+                        "mandatory" : false
+                },
+                "status" : {
+                        "description":"status of the task",
+                        "mandatory":true,
+                        "enumValues": ["DONE","START"],
+                        "dataType":"enumeration",
+                        "cardinality":"One",
+                        "defaultValue" : "START"
+                },
+                "message" : {
+                        "description":"the message",
+                        "mandatory":false,
+                        "dataType":"string",
+                        "cardinality":"One"
+                }
+        },
+        "options": {
+            "indexes": {
+                "keyIndex":{
+                    "indexName": "keyIndex",
+                    "keyList": ["taskId","clientId"],
+                    "indexOptions": ["unique"]
+                }
+            }
+        }
+}

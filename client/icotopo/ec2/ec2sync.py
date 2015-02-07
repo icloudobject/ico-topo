@@ -110,6 +110,14 @@ class EC2TopoSync ():
         r = self.yidb.upsert_object(self.repo,"TopoTask",payload)
         print(r)
 
+        # mark the cloud init is done
+        if (kick_off):
+            payload = {}
+            payload['_oid'] = "ROOT"
+            payload['initStatus'] = "done"
+            r = self.yidb.upsert_object(self.repo,"Cloud",payload)
+            print(r)
+
     def sync_one_resource(self, task_id, resource_type, resource_id, region=None):
         for resource in self.resources:
             if (resource['className'] == resource_type):

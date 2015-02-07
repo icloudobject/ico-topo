@@ -1,0 +1,15 @@
+{
+    "className" : "SecurityGroup",
+    "fields" : {
+        "id" : {
+            "path" : ["$.GroupId"]
+        },
+        "groupName" : {
+            "path" : "$.GroupName"
+        },
+        "vpc" : {
+            "path" : "$.VpcId",
+            "Class" : "Vpc"
+        }
+    }
+}

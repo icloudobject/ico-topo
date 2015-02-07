@@ -1,0 +1,38 @@
+{
+        "name": "TopoTaskLog",
+        "description": "The task log for each cloud call",
+        "fields": {
+                "taskId" : {
+                        "description":"The task id",
+                        "dataType": "string",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "logTime" : {
+                        "description":"The log time of the task",
+                        "dataType": "date",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "command" : {
+                        "description":"the args for the cloud call",
+                        "mandatory":false,
+                        "dataType":"string",
+                        "cardinality":"One"
+                },
+                "message" : {
+                        "description":"the message",
+                        "mandatory":false,
+                        "dataType":"string",
+                        "cardinality":"One"
+                }
+        },
+        "options": {
+            "indexes": {
+                "keyIndex":{
+                    "indexName": "keyIndex",
+                    "keyList": ["taskId"]
+                }
+            }
+        }
+}

@@ -1,0 +1,17 @@
+{
+    "className" : "Vpc",
+    "fields" : {
+        "id" : {
+            "path" : ["$.VpcId"]
+        },
+        "state" : {
+            "path" : "$.State"
+        },
+        "cidrBlock" : {
+            "path" : "$.CidrBlock"
+        },
+        "IsDefault" : {
+            "path" : "$.IsDefault"
+        }
+    }
+}

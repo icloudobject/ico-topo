@@ -1,0 +1,19 @@
+{
+        "name": "Cloud",
+        "description": "The cloud root",
+        "fields": {
+                "id" : {
+                        "description":"The root id",
+                        "dataType": "string",
+                        "cardinality": "One",
+                        "mandatory" : true
+                },
+                "initStatus": {
+                        "description":"The init status",
+                        "enumValues": ["init","start","done"],
+                        "dataType":"enumeration",
+                        "cardinality": "One",
+                        "defaultValue" : "init"
+                }
+        }
+}

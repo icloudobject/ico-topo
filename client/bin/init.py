@@ -91,6 +91,7 @@ def main():
         client_config = json.load(open("../config/" + client_id + "/config.json"))
         topo_repo = client_config['topo_repo']
         r = yidb.upsert_repo(topo_repo)
+        logging.info("response status for upsert repo:" + topo_repo)
 
         task_metadata = json.load(open("../config/topo_task.json"))
         response = yidb.upsert_metadata(topo_repo, "TopoTask", task_metadata)
@@ -100,7 +101,9 @@ def main():
         response = yidb.upsert_metadata(topo_repo, "TopoTaskLog", tasklog_metadata)
         logging.info("response status:" + str(response.status_code))
 
-        logging.info("response status for upsert repo:" + topo_repo)
+        cloud_metadata = json.load(open("../config/cloud.json"))
+        response = yidb.upsert_metadata(topo_repo, "Cloud", tasklog_metadata)
+        logging.info("response status:" + str(response.status_code))
 
         # for each class, load the mapping and also load the metadata
         resource_config = json.load(open("../config/" + client_id + "/resource.json"))
