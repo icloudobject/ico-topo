@@ -13,7 +13,7 @@ parser.add_argument('-r','--resource', help='The resourceId, e.g. i78xded34')
 parser.add_argument('-c','--cloud', help='The cloud config id')
 parser.add_argument('-g','--region', help='The region of the resource')
 parser.add_argument('-t','--type', help='The resource type, e.g. Instance')
-parser.add_argument('-k','--task', help='The taskId, e.g. uuid')
+parser.add_argument('-k','--taskid', help='The taskId, e.g. uuid')
 
 args = parser.parse_args()
 ec2_config_dir = os.path.dirname(os.path.abspath(__file__)) + "/../config/ec2"
@@ -61,7 +61,7 @@ if args.cloud:
         topo_sync = EC2TopoSync(config['cms_endpoint'], ec2_config_dir, cloud['topoRepoName'], cloud['accessKey'], cloud['accessSecret'])
 
         if args.action == 'init':
-            topo_sync.sync(args.task, True)
+            topo_sync.sync(args.taskid, True)
 
         if args.action == 'refresh':
             if (args.type == None or args.resource == None or args.task == None):

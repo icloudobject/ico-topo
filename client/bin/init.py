@@ -102,7 +102,7 @@ def main():
         logging.info("response status:" + str(response.status_code))
 
         cloud_metadata = json.load(open("../config/cloud.json"))
-        response = yidb.upsert_metadata(topo_repo, "Cloud", tasklog_metadata)
+        response = yidb.upsert_metadata(topo_repo, "Cloud", cloud_metadata)
         logging.info("response status:" + str(response.status_code))
 
         # for each class, load the mapping and also load the metadata

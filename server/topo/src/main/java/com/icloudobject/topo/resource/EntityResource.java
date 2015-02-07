@@ -152,7 +152,7 @@ public class EntityResource extends
                         refObj.put("_oid", v.toString());
                         refObj.put("_type", refClassName);
                         al.add(refObj);
-                        upsertObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, v.toString(), modeVal,request);
+                        insertIfNotExistObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, v.toString(), modeVal,request);
                     }              
                     payload.put(attrName, al);
                 } else {
@@ -160,7 +160,7 @@ public class EntityResource extends
                     refObj.put("_oid", value);
                     refObj.put("_type", refClassName);
                     payload.put(attrName, refObj);
-                    upsertObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, value.toString(), modeVal,request);
+                    insertIfNotExistObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, value.toString(), modeVal,request);
                 }
                 
             } else if (dataType!= null && dataType.equals("date")) {
@@ -230,7 +230,7 @@ public class EntityResource extends
         }
     }
 
-    private void upsertObject(UriInfo uriInfo,
+    private void insertIfNotExistObject(UriInfo uriInfo,
             final String priority,
             final String consistPolicy,
             String reponame, 
