@@ -65,7 +65,13 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         output = json
         region = us-west-2
 
-3. Init the ico client and run ec2 sync and s3 sync
+
+3. Install some packages used by ico python code
+
+        pip install requests
+	pip install jsonpath-rw
+
+4. Init the ico client and run ec2 sync and s3 sync
    
         cd client
         python setup.py install	
@@ -74,7 +80,7 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         python ec2.py
         python s3.py
 
-4. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
+5. Browse the inserted ec2 instances at: http://localhost:9090/topo/repositories/topocms/branches/main/Instance
 
 
   
