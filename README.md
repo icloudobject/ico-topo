@@ -59,7 +59,7 @@ EC2 data model (modelled by EC2 command line JSON output using describeXYZ API) 
         pip install awscli
 
    Follow AWS CLI docs to configure the credentials, default region and output format: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
-   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be configured correctly and the output format must be set as 'json'.
+   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be configured correctly and the output format must be set as 'json'. The following config needs to be at ~/.aws/config folder.
 
         [default]
         output = json
