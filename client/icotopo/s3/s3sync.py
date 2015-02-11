@@ -46,7 +46,7 @@ class S3BillingSync ():
         "convert unicode string to string"
         return unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
 
-    def sync(self,overwrite=None):
+    def sync(self):
         "sync billing line item for Instance usage"
         args = ['s3', 'ls', self.bucket]
         r = self.aws.call_cli(args)
@@ -68,6 +68,7 @@ class S3BillingSync ():
         for resource in self.resources:
             class_name = resource['className']
             usage_type = resource['usageType']
+            row_list = []
             for line in content:
                 if (usage_type in line):
                     row = {}
@@ -76,16 +77,9 @@ class S3BillingSync ():
                         row[header[index]] = item[1:][:-1]
                         index = index + 1
                     print("%s\t%s\t%s\t%s"  % (row['ResourceId'], row['UsageType'], row['ReservedInstance'], row['UsageStartDate']))
-                    response = self.yidb.post_service_model(self.repo,class_name,[row], 's3')
-                    if (response.status_code != 200):
-                        exit(response.content)
-                    elif "UPDATED_OK" in response.content:
-                        if (overwrite == None or overwrite == False):
-                            break
-                        else:
-                            print(response.content)
-                    else:
-                        print(response.content)
+                    row_list.append(row)
+            response = self.yidb.post_service_model(self.repo,class_name,row_list, 's3')
+            print(response.content)
 
             # remove records days ago
             days = datetime.date.today() - datetime.timedelta(self.keep_days)

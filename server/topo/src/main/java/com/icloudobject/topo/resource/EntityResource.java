@@ -103,6 +103,7 @@ public class EntityResource extends
             BasicDBObject attrDef = (BasicDBObject) entry.getValue();
             String refClassName = attrDef.getString("class");
             String dataType = attrDef.getString("dataType");
+            String dateFormat = attrDef.getString("dateFormat");
             String cardinality = attrDef.getString("cardinality");
             Object pathObj = attrDef.get("path");
             Object value = null;
@@ -111,7 +112,8 @@ public class EntityResource extends
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < paths.size(); i++) {
                     try {
-                        String v1 = JsonPath.read(jsonString, (String) paths.get(i)).toString();
+                        String v1 = JsonPath.read(jsonString,
+                                (String) paths.get(i)).toString();
                         if (sb.length() == 0) {
                             sb.append(v1);
                         } else {
@@ -134,9 +136,10 @@ public class EntityResource extends
                     e.printStackTrace();
                 }
             }
-            
+
             if (value == null) {
-                System.out.println("cannot find value for path:" + pathObj + " from json:" + jsonString);
+                System.out.println("cannot find value for path:" + pathObj
+                        + " from json:" + jsonString);
             }
             if (attrName.equals("id")) {
                 if (value == null) {
@@ -152,27 +155,31 @@ public class EntityResource extends
                         refObj.put("_oid", v.toString());
                         refObj.put("_type", refClassName);
                         al.add(refObj);
-                        insertIfNotExistObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, v.toString(), modeVal,request);
-                    }              
+                        insertIfNotExistObject(uriInfo, priority,
+                                consistPolicy, reponame, branch, refClassName,
+                                v.toString(), modeVal, request);
+                    }
                     payload.put(attrName, al);
                 } else {
                     JSONObject refObj = new JSONObject();
                     refObj.put("_oid", value);
                     refObj.put("_type", refClassName);
                     payload.put(attrName, refObj);
-                    insertIfNotExistObject(uriInfo, priority, consistPolicy, reponame, branch, refClassName, value.toString(), modeVal,request);
+                    insertIfNotExistObject(uriInfo, priority, consistPolicy,
+                            reponame, branch, refClassName, value.toString(),
+                            modeVal, request);
                 }
-                
-            } else if (dataType!= null && dataType.equals("date")) {
+
+            } else if (dataType != null && dataType.equals("date")) {
                 if (cardinality != null && cardinality.equals("many")) {
                     ArrayList al = new ArrayList();
                     for (Object v : (List) value) {
-                        long time = Long.parseLong(v.toString());
+                        long time = getDate(v.toString(), dateFormat);
                         al.add(time);
                     }
                     payload.put(attrName, al);
                 } else {
-                    long time = Long.parseLong(value.toString());
+                    long time = getDate(value.toString(), dateFormat);
                     payload.put(attrName, time);
                 }
             } else {
@@ -216,6 +223,24 @@ public class EntityResource extends
         return status;
     }
 
+    private long getDate(String value, String dateFormat) {
+        if (dateFormat != null) {
+            DateFormat format = new SimpleDateFormat(dateFormat);
+            format.setTimeZone(TimeZone.getTimeZone("GMT"));
+            try {
+                Date date = format.parse(value.toString());
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                return c.getTimeInMillis();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        } else {
+            return Long.parseLong(value);
+        }
+    }
+
     private boolean existObject(String repo, String className, String id) {
         String queryString = className + "[@_oid=\"" + id + "\"]";
         QueryContext queryContext = new QueryContext(repo, "main");
@@ -230,27 +255,21 @@ public class EntityResource extends
         }
     }
 
-    private void insertIfNotExistObject(UriInfo uriInfo,
-            final String priority,
-            final String consistPolicy,
-            String reponame, 
-            String branch,
-            String refClassName, 
-            String value,
-            String modeVal,
+    private void insertIfNotExistObject(UriInfo uriInfo, final String priority,
+            final String consistPolicy, String reponame, String branch,
+            String refClassName, String value, String modeVal,
             HttpServletRequest request) {
         if (!existObject(reponame, refClassName, value)) {
             String postStr = "{\"_oid\":\"" + value + "\"}";
             try {
-                super.createEntity(uriInfo, reponame, branch,
-                        refClassName, priority, consistPolicy, postStr,
-                        modeVal, request);
+                super.createEntity(uriInfo, reponame, branch, refClassName,
+                        priority, consistPolicy, postStr, modeVal, request);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
     @GET
     @Path("/topo/{metadata}")
     public String topoTest(@Context final UriInfo uriInfo,
