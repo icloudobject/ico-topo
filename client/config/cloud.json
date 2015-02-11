@@ -2,6 +2,12 @@
         "name": "Cloud",
         "description": "The cloud root",
         "fields": {
+                "id": {
+                        "description":"The cloud id",
+                        "dataType":"string",
+                        "cardinality": "One",
+                        "defaultValue" : "ROOT"
+                },
                 "initStatus": {
                         "description":"The init status",
                         "enumValues": ["init","start","done"],
