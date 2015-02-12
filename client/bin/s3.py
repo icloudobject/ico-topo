@@ -49,8 +49,18 @@ if (args.cloud):
     if (response.status_code == 200 and len(response.json()['result']) > 0):
         cloud = response.json()['result'][0]
         if args.action == 'init':
+            payload = {}
+            payload['_oid'] = "ROOT"
+            payload['initBillingStatus'] = "init"
+            r = yidb.upsert_object(cloud['topoRepoName'],"Cloud",payload)
+            print(r)
             topo_sync = S3BillingSync(config['cms_endpoint'],  s3_config_dir , cloud['billingDataBucketName'], cloud['topoRepoName'], keep_days, cloud['accessKey'], cloud['accessSecret'])
             topo_sync.sync()
+            payload = {}
+            payload['_oid'] = "ROOT"
+            payload['initBillingStatus'] = "done"
+            r = yidb.upsert_object(cloud['topoRepoName'],"Cloud",payload)
+            print(r)
     else:
         topo_sync = S3BillingSync(config['cms_endpoint'],  s3_config_dir, config['billing_bucket_name'], config['topo_repo'], keep_days)
         topo_sync.sync()
