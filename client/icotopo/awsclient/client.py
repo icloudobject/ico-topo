@@ -36,7 +36,7 @@ class AwsClient:
             print "Unexpected error:", sys.exc_info()[0]
         finally:
             if (result_string == "" and err_result_string != ""):
-                return err_result_string
+                raise Exception(err_result_string)
             if result_string == "":
                 return {}
             elif result_string[0] == "{":

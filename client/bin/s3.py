@@ -7,6 +7,7 @@ from icotopo.s3.s3sync import S3BillingSync
 import time
 import argparse
 import os
+import sys
 
 parser = argparse.ArgumentParser(description='sync AWS billing from S3 to YIDB.')
 parser.add_argument('-a','--action',help='The action of the command, e.g. sync: sync billing data. init: initial sync', required=True)
@@ -53,9 +54,13 @@ if (args.cloud):
             payload['_oid'] = "ROOT"
             payload['initBillingStatus'] = "init"
             r = yidb.upsert_object(cloud['topoRepoName'],"Cloud",payload)
-            print(r)
+            #print(r)
             topo_sync = S3BillingSync(config['cms_endpoint'],  s3_config_dir , cloud['billingDataBucketName'], cloud['topoRepoName'], keep_days, cloud['accessKey'], cloud['accessSecret'])
-            topo_sync.sync()
+            try:
+                topo_sync.sync()
+            except Exception, e:
+                print "Error:" + str(e)
+                sys.exit(1)
             payload = {}
             payload['_oid'] = "ROOT"
             payload['initBillingStatus'] = "done"
@@ -63,5 +68,9 @@ if (args.cloud):
             print(r)
     else:
         topo_sync = S3BillingSync(config['cms_endpoint'],  s3_config_dir, config['billing_bucket_name'], config['topo_repo'], keep_days)
-        topo_sync.sync()
+        try:
+            topo_sync.sync()
+        except Exception, e:
+            print "Error:" + str(e)
+        print "DONE"
 
