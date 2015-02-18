@@ -7,6 +7,9 @@
         "instanceId" : {
             "path" : "$.ResourceId"
         },
+        "instanceType" : {
+            "path" : "$.InstanceType"
+        },
         "reserved" : {
             "path" : "$.ReservedInstance"
         },

@@ -77,6 +77,8 @@ class S3BillingSync ():
                         row[header[index]] = item[1:][:-1]
                         index = index + 1
                     print("%s\t%s\t%s\t%s"  % (row['ResourceId'], row['UsageType'], row['ReservedInstance'], row['UsageStartDate']))
+                    index = row['UsageType'].index(":")+1
+                    row['InstanceType'] = row['UsageType'][index:]
                     row_list.append(row)
             response = self.yidb.post_service_model(self.repo,class_name,row_list, 's3')
             print(response.content)
