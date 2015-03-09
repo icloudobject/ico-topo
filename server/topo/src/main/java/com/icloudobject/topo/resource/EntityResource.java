@@ -205,7 +205,8 @@ public class EntityResource extends
                 e.printStackTrace();
             }
         } else {
-            payload.put("_oid", objectId);
+        	payload.put("_oid", objectId);
+        	payload.put("id", objectId);
             try {
                 Response r = super.createEntity(uriInfo, reponame, branch,
                         className, priority, consistPolicy, payload.toString(),
