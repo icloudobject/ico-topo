@@ -10,6 +10,9 @@
         "region" : {
             "path" : "$.region"
         },
+        "image" : {
+            "path" : "$.ImageId"
+        },
         "availabilityZone" : {
             "path" : "$.Placement.AvailabilityZone",
             "class" : "AvailabilityZone"

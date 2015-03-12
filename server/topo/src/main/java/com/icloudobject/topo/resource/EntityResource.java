@@ -261,7 +261,7 @@ public class EntityResource extends
             String refClassName, String value, String modeVal,
             HttpServletRequest request) {
         if (!existObject(reponame, refClassName, value)) {
-            String postStr = "{\"_oid\":\"" + value + "\"}";
+            String postStr = "{\"_oid\":\"" + value + "\",\"id\":\"" + value + "\"}";
             try {
                 super.createEntity(uriInfo, reponame, branch, refClassName,
                         priority, consistPolicy, postStr, modeVal, request);

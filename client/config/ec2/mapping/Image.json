@@ -1,0 +1,8 @@
+{
+    "className" : "Image",
+    "fields" : {
+        "id" : {
+            "path" : ["$.ImageId"]
+        }
+    }
+}
