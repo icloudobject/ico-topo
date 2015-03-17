@@ -8,7 +8,7 @@
             "path": "$.Name"
         },
         "os": {
-            "path" : "$.Platform", "default" : "Linux", "otherwise" : "Windows"
+            "path" : "$.Platform"
         }
     }
 }

@@ -4,6 +4,6 @@
     {"className": "SecurityGroup", "command": "describe-security-groups", "listPath" : "$.SecurityGroups", "id_name" : "group-ids"},
     {"className": "Region", "command": "describe-regions","listPath" : "$.Regions"},
     {"useRegion" : true, "className": "AvailabilityZone", "command": "describe-availability-zones", "listPath" : "$.AvailabilityZones"},
-    {"className": "Image", "command": "describe-images --image-ids ", "updateOnly": true}
+    {"className": "Image", "command": "describe-images --image-ids", "listPath" : "$.Images", "updateOnly": true}
 
 ]

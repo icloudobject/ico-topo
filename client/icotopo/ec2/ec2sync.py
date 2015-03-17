@@ -59,13 +59,13 @@ class EC2TopoSync ():
         r = self.yidb.insert_object(self.repo,"TopoTaskLog",payload)
         return r
 
-    def update_class(self, task_id, class_name, args, listPath=None):
+    def update_class(self, task_id, region, class_name, args, listPath=None):
         "update on one class"
         r = self.yidb.query(self.repo, class_name)
         resources = r.json()['result']
-        for resource_id in resources:
+        for resource in resources:
             args1 = list(args)
-            args1.append(resource_id)
+            args1.append(str(resource['id']))
             response_json = self.aws.call_cli(args1)
             if type(response_json) is dict:
                 self.log_call(task_id, args1, "OK")
@@ -73,7 +73,14 @@ class EC2TopoSync ():
                 self.log_call(task_id, args1, response_json)
             if response_json == '[]':
                 continue
-            self.process_object(None, class_name, response_json)
+            if (listPath):
+                jsonpath_expr = parse(listPath)
+                matches = jsonpath_expr.find(response_json)
+                for match in matches:
+                    response_json = match.value
+                    self.process_object(region, class_name, response_json)
+            else:
+                self.process_object(None, class_name, response_json)
 
     def process_class(self, task_id, region, class_name, args, listPath=None):
         "process on one class"
@@ -159,7 +166,7 @@ class EC2TopoSync ():
             args.append(str(resource_config['max-items']))
 
         if update_only:
-            self.update_class(task_id, resource_config['className'], args, list_path)
+            self.update_class(task_id, region, resource_config['className'], args, list_path)
         elif 'useRegion' in resource_config and resource_config['useRegion']:
             if resource_id != None:
                 r_args = list(args)
