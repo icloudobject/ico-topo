@@ -3,6 +3,12 @@
     "fields" : {
         "id" : {
             "path" : ["$.ImageId"]
+        },
+        "name" : {
+            "path": "$.Name"
+        },
+        "os": {
+            "path" : "$.Platform", "default" : "Linux", "otherwise" : "Windows"
         }
     }
 }

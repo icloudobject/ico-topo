@@ -20,7 +20,6 @@ ec2_config_dir = os.path.dirname(os.path.abspath(__file__)) + "/../config/ec2"
 
 config = json.load(open(ec2_config_dir + "/config.json"))
 
-
 if args.action == 'sync':
     sync_minutes = config['sync_minutes']
     if sync_minutes <= 0:

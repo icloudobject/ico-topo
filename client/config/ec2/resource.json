@@ -1,7 +1,9 @@
 [
     {"useRegion" : true, "className": "Instance", "command": "describe-instances", "max-items" : 1000, "listPath" : "$.Reservations[*].Instances", "id_name" : "instance-ids"},
-    {"className": "Vpc", "command": "describe-vpcs", "max-items" : 100, "listPath" : "$.Vpcs", "id_name" : "vpc-ids"},
-    {"className": "SecurityGroup", "command": "describe-security-groups", "max-items" : 100, "listPath" : "$.SecurityGroups", "id_name" : "group-ids"},
+    {"className": "Vpc", "command": "describe-vpcs", "listPath" : "$.Vpcs", "id_name" : "vpc-ids"},
+    {"className": "SecurityGroup", "command": "describe-security-groups", "listPath" : "$.SecurityGroups", "id_name" : "group-ids"},
     {"className": "Region", "command": "describe-regions","listPath" : "$.Regions"},
-    {"useRegion" : true, "className": "AvailabilityZone", "command": "describe-availability-zones", "listPath" : "$.AvailabilityZones"}
+    {"useRegion" : true, "className": "AvailabilityZone", "command": "describe-availability-zones", "listPath" : "$.AvailabilityZones"},
+    {"className": "Image", "command": "describe-images --image-ids ", "updateOnly": true}
+
 ]
