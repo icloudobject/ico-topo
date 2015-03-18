@@ -7,7 +7,7 @@
         "name" : {
             "path": "$.Name"
         },
-        "os": {
+        "platform": {
             "path" : "$.Platform"
         }
     }
