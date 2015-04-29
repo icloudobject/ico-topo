@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import net.minidev.json.JSONObject;
-
 import com.ebay.cloud.cms.dal.entity.IEntity;
 import com.ebay.cloud.cms.query.service.IQueryResult;
 import com.ebay.cloud.cms.query.service.QueryContext;

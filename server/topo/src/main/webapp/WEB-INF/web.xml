@@ -32,6 +32,6 @@
     </listener>
     <servlet-mapping>
         <servlet-name>cms-service</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/cms/*</url-pattern>
     </servlet-mapping>
 </web-app>

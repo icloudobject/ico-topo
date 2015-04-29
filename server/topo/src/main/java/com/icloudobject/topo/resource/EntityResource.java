@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
@@ -19,7 +18,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,6 +27,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
+
 import com.ebay.cloud.cms.dal.entity.IEntity;
 import com.ebay.cloud.cms.query.service.IQueryResult;
 import com.ebay.cloud.cms.query.service.QueryContext;
@@ -37,10 +39,6 @@ import com.ebay.cloud.cms.sysmgmt.server.CMSServer;
 import com.jayway.jsonpath.JsonPath;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
 /**
  * @author Liangfei
@@ -77,7 +75,7 @@ public class EntityResource extends
             throw (new IllegalArgumentException("topoClientId cannot be null"));
         }
         JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonString);
-        List<String> responses = new ArrayList();
+        List<String> responses = new ArrayList<String>();
         for (int i = 0; i < jsonArray.size(); i++) {
             String jsonStr = jsonArray.get(i).toString();
             responses.add(handleOneTopo(uriInfo, reponame, branch, metadata,
@@ -149,8 +147,8 @@ public class EntityResource extends
             }
             if (refClassName != null) {
                 if (cardinality != null && cardinality.equals("many")) {
-                    ArrayList al = new ArrayList();
-                    for (Object v : (List) value) {
+                    ArrayList<Object> al = new ArrayList<Object>();
+                    for (Object v : (List<?>) value) {
                         JSONObject refObj = new JSONObject();
                         refObj.put("_oid", v.toString());
                         refObj.put("_type", refClassName);
@@ -172,8 +170,8 @@ public class EntityResource extends
 
             } else if (dataType != null && dataType.equals("date")) {
                 if (cardinality != null && cardinality.equals("many")) {
-                    ArrayList al = new ArrayList();
-                    for (Object v : (List) value) {
+                    ArrayList<Object> al = new ArrayList<Object>();
+                    for (Object v : (List<?>) value) {
                         long time = getDate(v.toString(), dateFormat);
                         al.add(time);
                     }
