@@ -184,7 +184,6 @@ public class CloudService extends AbstractService {
             return base;
         }
         return "/usr/local/ico-topo";
-
     }
 
     /*

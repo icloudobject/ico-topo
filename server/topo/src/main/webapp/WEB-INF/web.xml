@@ -3,8 +3,16 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
          
-    <display-name>com.ebay.cloud.cms</display-name>
+    <display-name>iCloudObject Topo</display-name>
     
+    	<!-- Root Application Context -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:/spring-config/icosvr-core-beans.xml
+		</param-value>
+	</context-param>
+
     <servlet>
         <servlet-name>cms-service</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -27,6 +35,22 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    
+    <!-- Spring MVC entry point servlet -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/spring-config/icosvr-web-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/web/*</url-pattern>
+	</servlet-mapping>
+    
     <listener>
         <listener-class>com.icloudobject.topo.listener.TopoListener</listener-class>
     </listener>
