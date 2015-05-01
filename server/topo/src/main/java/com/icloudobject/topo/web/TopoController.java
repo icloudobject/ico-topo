@@ -59,7 +59,13 @@ public class TopoController {
 			throw e;
 		}
 	}
-	
+
+    @RequestMapping(value = "/api/topo/", method = RequestMethod.GET)
+    @ResponseBody
+    public String hello() {
+        return "Hello, Topo!";
+    }
+
 	@RequestMapping(value = "/api/topo_next/{resource}/{id}", method = RequestMethod.POST)
 	@ResponseBody
 	public String getNeighbor(/*final @AuthenticationPrincipal IcoUser currentUser,*/
@@ -73,7 +79,6 @@ public class TopoController {
 		} else {
 			throw new Exception("Cloud first scan not finished yet.");
 		}
-
 	}
 
 

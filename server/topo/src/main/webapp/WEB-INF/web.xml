@@ -5,13 +5,17 @@
          
     <display-name>iCloudObject Topo</display-name>
     
-    	<!-- Root Application Context -->
+    <!-- Root Application Context -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			classpath:/spring-config/icosvr-core-beans.xml
 		</param-value>
 	</context-param>
+
+    <listener>
+        <listener-class>com.icloudobject.topo.listener.TopoListener</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>cms-service</servlet-name>
@@ -35,7 +39,7 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    
+
     <!-- Spring MVC entry point servlet -->
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
@@ -46,14 +50,12 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/web/*</url-pattern>
 	</servlet-mapping>
-    
-    <listener>
-        <listener-class>com.icloudobject.topo.listener.TopoListener</listener-class>
-    </listener>
+
     <servlet-mapping>
         <servlet-name>cms-service</servlet-name>
         <url-pattern>/cms/*</url-pattern>
