@@ -23,8 +23,9 @@ public class TopoListener implements ServletContextListener {
             System.setProperty("CMS_HOME", ".");
         }
         CMSServer.getCMSServer().start();
-        
+
         CMSDelegate.getInstance();
+
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
