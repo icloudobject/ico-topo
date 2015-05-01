@@ -65,7 +65,7 @@ public class MetadataLoader {
 	/**
 	 * Check and init the sys repo. Use raw connection.
 	 */
-	@PostConstruct
+//	@PostConstruct
 	private void sysInit() {
 		Client client = null;
 		try {

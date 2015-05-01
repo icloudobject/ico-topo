@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         id="WebApp_ID" version="2.5">
-         
-    <display-name>iCloudObject Topo</display-name>
-    
-    <!-- Root Application Context -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			classpath:/spring-config/icosvr-core-beans.xml
-		</param-value>
-	</context-param>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
 
-    <listener>
-        <listener-class>com.icloudobject.topo.listener.TopoListener</listener-class>
-    </listener>
+	<display-name>iCloudObject Topo</display-name>
 
-    <servlet>
-        <servlet-name>cms-service</servlet-name>
-        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>com.icloudobject.topo.resource</param-value>
-        </init-param>
-        <init-param>
-	         <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-	         <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter,com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
-     	</init-param>
-     	<init-param>
-            <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-            <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
-        </init-param>
-     	
-        <init-param>
-            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+	<!-- CMS API Servlet -->
+	<listener>
+		<listener-class>com.icloudobject.topo.listener.TopoListener</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>cms-service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>com.icloudobject.topo.resource</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>com.sun.jersey.api.container.filter.PostReplaceFilter,com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+			<param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+		</init-param>
 
-    <!-- Spring MVC entry point servlet -->
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>cms-service</servlet-name>
+		<url-pattern>/topo/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Spring MVC entry point servlet -->
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -53,11 +51,7 @@
 
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/web/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>cms-service</servlet-name>
-        <url-pattern>/cms/*</url-pattern>
-    </servlet-mapping>
 </web-app>

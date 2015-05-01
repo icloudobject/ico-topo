@@ -29,19 +29,10 @@ import com.icloudobject.topo.skeleton.AwsCloudConfig;
 @Controller
 public class TopoController {
 
-//	private static final int DEFAULT_LEVEL=3;
-//	private static final String ROOT_TYPE="Cloud";
-//	private static final String ROOT_NAME="ROOT";
 	private static Logger logger = LoggerFactory.getLogger(TopoController.class);
 
 	@Autowired
     private CloudService cloudsService;
-	
-//	@Autowired
-//    private CostService costService;
-//	@Autowired
-//	private TenantService tenantService;
-
 	
 	@RequestMapping(value = "/api/topo/", method = RequestMethod.POST)
 	@ResponseBody
@@ -60,10 +51,10 @@ public class TopoController {
 		}
 	}
 
-    @RequestMapping(value = "/api/topo/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/topo/hello", method = RequestMethod.GET)
     @ResponseBody
     public String hello() {
-        return "Hello, Topo!";
+        return "Hello, Topo";
     }
 
 	@RequestMapping(value = "/api/topo_next/{resource}/{id}", method = RequestMethod.POST)
