@@ -1,5 +1,5 @@
 {
-    "cms_endpoint" : "http://localhost:9090/cms/repositories/",
+    "cms_endpoint" : "http://localhost:8080/topo/repositories/",
     "topo_repo" : "topoaws",
     "topo_client_id" : "aws_client"
 }

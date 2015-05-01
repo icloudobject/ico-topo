@@ -23,7 +23,7 @@ public class AwsCloudConfig extends CloudConfig {
 
     @Override
     public String getTopoRepoName() {
-        return "AwsCloudTopo";
+        return "topoaws";
     }
 
     @Override
