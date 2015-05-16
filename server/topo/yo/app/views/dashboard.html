@@ -1,0 +1,69 @@
+<div class="row" ng-show="!dataReady">
+	<div class="col-xs-12">
+		<p>{{ 'dash.noAgentData' | translate }}</p>
+		<p>{{ 'setup.agentIntro' | translate }}</p>
+	    <p ng-show="agentInfo != null">
+	        {{ 'setup.agentInstCmd' | translate }}
+	        <div class="code-block">
+	            curl -u {{ agentInfo.agentUsername }}:{{ agentInfo.agentPassword }} https://www.icloudobject.com/api/install | sh
+	        </div>
+	    </p>
+	    <p ng-show="agentInfo == null">
+	    	{{ 'setup.agentInstErr' | translate }}
+	    </p>
+	</div>
+</div>
+
+<div class="row" ng-show="dataReady">
+	<div class="col-xs-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+                <div class="dashboardHeading">
+                    {{ totalSaving }} <i>saving</i> &nbsp;/&nbsp; {{ totalCost }} <i>cost</i>
+                </div>
+                <canvas id="savingChart" class="chart chart-pie"
+                    data="savingData" labels="savingLabels" legend="true"></canvas>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+                <div class="dashboardHeading">
+                    {{ cpuTotal }} <i>CPU</i> &nbsp;/&nbsp; {{ memTotal }} <i>GB</i>
+                </div>
+                <div style="margin-top: 30px; margin-bottom: 20px;">
+                    <canvas id="cpuChart" class="chart chart-donut"
+                        data="cpuData" labels="cpuLabels" legend="true"></canvas>
+                    <canvas id="memChart" class="chart chart-donut"
+                        data="memData" labels="memLabels" legend="true"></canvas>
+                </div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+                <div class="dashboardHeading">
+                    {{ instanceTotal }} <i>instances found</i>
+                </div>
+                <canvas id="instanceChart" class="chart chart-pie"
+                    data="instanceData" labels="instanceLabels" legend="true"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" ng-show="dataReady">
+	<div class="col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+			    <!-- TODO: use directive to compose the controller and HTML tags -->
+				<div ng-controller="dashboardGridCtrl">
+					<div ui-grid="gridOptions" ui-grid-expandable class="grid"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

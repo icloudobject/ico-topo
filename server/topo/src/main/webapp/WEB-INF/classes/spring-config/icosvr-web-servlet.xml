@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Scan packages for beans -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	<context:component-scan base-package="com.icloudobject.topo" />
+
+	<import resource="classpath:/spring-config/icosvr-core-beans.xml" />
+	<import resource="classpath:/spring-config/icosvr-web-beans.xml" />
+
+	<mvc:interceptors>
+		<bean class="com.icloudobject.topo.listener.InitializationIntercepter">
+		</bean>
+	</mvc:interceptors>
+
+	<!-- Use container default controller to host static contents -->
+	<!-- Not using mvc:resources annotation as it requires an entry for each 
+		location and is cumbersome to handle the root path -->
+	<mvc:default-servlet-handler />
+
+
+</beans>
+

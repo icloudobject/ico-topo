@@ -1,0 +1,146 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h4 class="modal-title">Manage Cloud Accounts</h4>
+</div>
+
+<div class="modal-body">
+
+    <div class="alert alert-danger" ng-show="listHttpError">
+        Server or network errors. Please try again later.
+    </div>
+
+    <h3>Add New Cloud Account</h3>
+    <div class="alert alert-danger" ng-show="addFormHttpError">
+        Failed to add new cloud account due to server error. Please try again later.
+    </div>
+    <div class="alert alert-danger" ng-show="addFormServerErrors!=null">
+        <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+    </div>
+	<div class="alert alert-success" ng-show="addFormSuccess">
+        Server or network errors. Please try again later.
+    </div>
+    <div class="multi-form-container">
+        <form class="form" name="newCloudForm" ng-submit="addCloud()" novalidate>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="cloudName" value="aws" checked />
+                    Amazon Web Service
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="cloudName" value="aliyun" disabled />
+                    Aliyun
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="cloudName" value="google" disabled />
+                    Google
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="cloudName" value="azure" disabled />
+                    Microsoft Azure
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="cloudName" value="openstack" disabled />
+                    OpenStack
+                </label>
+            </div>
+            <div class="form-group" ng-class="{
+                'has-error': newCloudForm.credKey.$invalid && newCloudForm.credKey.$dirty,
+                'has-success': newCloudForm.credKey.$valid && newCloudForm.credKey.$dirty }">
+                <input type="text" name="credKey" class="form-control"
+                    placeholder="Key of your read-only credential"
+                    ng-model="newCloud.credKey" ng-minlength="8"
+                    ng-maxlength="64" ico-focus required autofocus />
+                <p class="help-block"
+                    ng-show="newCloudForm.credKey.$invalid
+                        && newCloudForm.credKey.$dirty
+                        && !newCloudForm.credKey.$focused">
+                    Invalid credential key
+                </p>
+            </div>
+            <div class="form-group" ng-class="{
+                'has-error': newCloudForm.credSecret.$invalid && newCloudForm.credSecret.$dirty,
+                'has-success': newCloudForm.credSecret.$valid && newCloudForm.credSecret.$dirty }">
+                <input type="text" name="credSecret" class="form-control"
+                    placeholder="Secret of your read-only credential"
+                    ng-model="newCloud.credSecret" ng-minlength="8"
+                    ng-maxlength="256" ico-focus required />
+                <p class="help-block"
+                    ng-show="newCloudForm.credSecret.$invalid
+                        && newCloudForm.credSecret.$dirty
+                        && !newCloudForm.credSecret.$focused">
+                    Invalid credential secret
+                </p>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"
+                    ng-disabled="addFormSubmitting"
+                    ng-switch="addFormSubmitting">
+                    <span ng-switch-default>Add Cloud</span>
+                    <span ng-switch-when="true">Submitting...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <h3>Update Existing Cloud Accounts</h3>
+    <div class="alert alert-danger" ng-show="httpError">
+        Server or network errors. Please try again later.
+    </div>
+    <div class="alert alert-danger" ng-show="addFormServerErrors!=null">
+        <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+    </div>
+	<div class="alert alert-success" ng-show="addFormSuccess">
+        New cloud account has been created successfully!
+    </div>
+    <div class="multi-form-container" ng-form="repeatForm"
+        ng-repeat="c in clouds | orderBy:['cloudName','credKey']">
+        <div class="form-group">
+            <strong>
+                Cloud Account #{{ $index + 1 }}
+                (type: {{ c.cloudName }})
+            </strong>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': repeatForm.credKey.$invalid && repeatForm.credKey.$dirty,
+            'has-success': repeatForm.credKey.$valid && repeatForm.credKey.$dirty }">
+            <input type="text" name="credKey" class="form-control"
+                placeholder="Key of your read-only credential"
+                ng-model="c.credKey" ng-minlength="8"
+                ng-maxlength="64" ico-focus required autofocus />
+            <p class="help-block"
+                ng-show="repeatForm.credKey.$invalid
+                    && repeatForm.credKey.$dirty
+                    && !repeatForm.credKey.$focused">
+                Invalid credential key
+            </p>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': repeatForm.credSecret.$invalid && repeatForm.credSecret.$dirty,
+            'has-success': repeatForm.credSecret.$valid && repeatForm.credSecret.$dirty }">
+            <input type="text" name="credSecret" class="form-control"
+                placeholder="Secret of your read-only credential"
+                ng-model="c.credSecret" ng-minlength="8"
+                ng-maxlength="256" ico-focus required />
+            <p class="help-block"
+                ng-show="repeatForm.credSecret.$invalid
+                    && repeatForm.credSecret.$dirty
+                    && !repeatForm.credSecret.$focused">
+                Invalid credential secret
+            </p>
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="active" ng-model="c.active" />
+                Enable this cloud account
+            </label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-disabled="submitting" ng-switch="submitting">
+                <span ng-switch-default>Update</span>
+                <span ng-switch-when="true">Updating...</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+

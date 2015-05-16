@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">x</button>
+    <h4 class="modal-title">Login</h4>
+</div>
+
+<div class="modal-body">
+
+    <div class="alert alert-danger" ng-show="httpError">
+    	{{ 'err.http' | translate }}
+    </div>
+
+    <div class="alert alert-danger" ng-show="serverErrors!=null">
+        <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+    </div>
+
+    <form class="form" name="loginForm" ng-submit="login()" novalidate>
+        <div class="form-group"
+        	ng-class="{
+        		'has-error': loginForm.username.$invalid && loginForm.username.$dirty,
+				'has-success': loginForm.username.$valid && loginForm.username.$dirty }">
+            <label for="username">{{ 'login.username' | translate }}</label>
+            <input type="text" name="username" class="form-control" placeholder="Your username"
+            	ng-model="loginCreds.username" ng-minlength="6" ng-maxlength="64" ico-focus required autofocus />
+            <p class="help-block"
+                ng-show="loginForm.username.$invalid
+                    && loginForm.username.$dirty
+                    && !loginForm.username.$focused">
+                {{ 'err.username' | translate }}
+            </p>
+        </div>
+        <div class="form-group"
+        	ng-class="{
+            	'has-error': loginForm.password.$invalid && loginForm.password.$dirty,
+				'has-success': loginForm.password.$valid && loginForm.password.$dirty }">
+            <label for="password">{{ 'login.pass' | translate }}</label>
+            <input type="password" name="password" class="form-control" placeholder="Your password"
+            	ng-model="loginCreds.password" ng-minlength="8" ng-maxlength="64" ico-focus required />
+            <p class="help-block"
+                ng-show="loginForm.password.$invalid
+                    && loginForm.password.$dirty
+                    && !loginForm.password.$focused">
+                {{ 'err.password' | translate }}
+            </p>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="submitting" ng-switch="submitting">
+                <span ng-switch-default>{{ 'nav.login' | translate }}</span>
+                <span ng-switch-when="true">{{ 'msg.submitting' | translate }}</span>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h4 class="modal-title">Edit Profile</h4>
+</div>
+
+<div class="modal-body">
+    <div class="alert alert-danger" ng-show="httpError">
+        Server or network errors. Please try again later.
+    </div>
+    <div class="alert alert-danger" ng-show="serverErrors!=null">
+        <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+    </div>
+	<div class="alert alert-success" ng-show="success">
+        Your profile has been updated successfully!
+    </div>
+    <form class="form" name="profileForm" ng-submit="updateProfile()" novalidate>
+        <div class="form-group" ng-class="{
+            'has-error': profileForm.displayName.$invalid && profileForm.displayName.$dirty,
+			'has-success': profileForm.displayName.$valid && profileForm.displayName.$dirty }">
+            <label for="displayName">Display Name</label>
+            <input type="text" name="displayName" class="form-control"
+                placeholder="Your name" ng-model="profile.displayName"
+                ng-minlength="1" ng-maxlength="64" ico-focus required autofocus />
+            <p class="help-block"
+                ng-show="profileForm.displayName.$invalid
+                    && profileForm.displayName.$dirty
+                    && !profileForm.displayName.$focused">
+                Display Name cannot be empty and must be between 3 to 64 characters.
+            </p>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': profileForm.email.$invalid && profileForm.email.$dirty,
+			'has-success': profileForm.email.$valid && profileForm.email.$dirty }">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control"
+                placeholder="Your email" ng-model="profile.email"
+                ng-maxlength="64" ico-focus required />
+            <p class="help-block"
+                ng-show="profileForm.email.$invalid
+                    && profileForm.email.$dirty
+                    && !profileForm.email.$focused">
+                Email must be a valid email address with less than 64 characters.
+            </p>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': profileForm.company.$invalid && profileForm.company.$dirty,
+			'has-success': profileForm.company.$valid && profileForm.company.$dirty }">
+            <label for="company">Company</label>
+            <input type="text" name="company" class="form-control"
+                placeholder="Your company" ng-model="profile.company"
+                ng-minlength="2" ng-maxlength="64" ico-focus required />
+            <p class="help-block"
+                ng-show="profileForm.company.$invalid
+                    && profileForm.company.$dirty
+                    && !profileForm.company.$focused">
+                Company cannot be empty and must be between 2 to 64 characters.
+            </p>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="submitting" ng-switch="submitting">
+                <span ng-switch-default>Update Profile</span>
+                <span ng-switch-when="true">Updating...</span>
+            </button>
+        </div>
+    </form>
+</div>

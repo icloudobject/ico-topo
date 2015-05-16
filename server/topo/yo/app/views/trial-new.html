@@ -1,0 +1,79 @@
+
+<div class="alert alert-danger" ng-show="httpError">
+    Server or network errors. Please try again later.
+</div>
+<div class="alert alert-danger" ng-show="serverErrors!=null">
+    <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+</div>
+
+<form class="form" name="startTrialForm" ng-submit="startTrial()" novalidate>
+
+    <div class="form-group">
+        <label class="radio-inline">
+            <input type="radio" name="cloudName" value="aws" checked />
+            Amazon Web Service
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="cloudName" value="aliyun" disabled />
+            Aliyun
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="cloudName" value="google" disabled />
+            Google
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="cloudName" value="azure" disabled />
+            Microsoft Azure
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="cloudName" value="openstack" disabled />
+            OpenStack
+        </label>
+    </div>
+
+    <div class="form-group" ng-class="{
+        'has-error': startTrialForm.credKey.$invalid && startTrialForm.credKey.$dirty,
+        'has-success': startTrialForm.credKey.$valid && startTrialForm.credKey.$dirty }">
+        <input type="text" name="credKey" class="form-control"
+            placeholder="Key of your read-only credential"
+            ng-model="cloudConfig.credKey" ng-minlength="8"
+            ng-maxlength="64" ico-focus required autofocus />
+        <p class="help-block"
+            ng-show="startTrialForm.credKey.$invalid
+                && startTrialForm.credKey.$dirty
+                && !startTrialForm.credKey.$focused">
+            Invalid credential key
+        </p>
+    </div>
+
+    <div class="form-group" ng-class="{
+        'has-error': startTrialForm.credSecret.$invalid && startTrialForm.credSecret.$dirty,
+        'has-success': startTrialForm.credSecret.$valid && startTrialForm.credSecret.$dirty }">
+        <input type="text" name="credSecret" class="form-control"
+            placeholder="Secret of your read-only credential"
+            ng-model="cloudConfig.credSecret" ng-minlength="8"
+            ng-maxlength="256" ico-focus required />
+        <p class="help-block"
+            ng-show="startTrialForm.credSecret.$invalid
+                && startTrialForm.credSecret.$dirty
+                && !startTrialForm.credSecret.$focused">
+            Invalid credential secret
+        </p>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-lg"
+            ng-disabled="submitting" ng-switch="submitting">
+            <span ng-switch-default>Start Free Trial</span>
+            <span ng-switch-when="true">Setting Up Your Trial Account...</span>
+        </button>
+    </div>
+
+    <div class="form-group">
+        <a target="_blank"
+            href="http://elastic-security.com/2014/01/08/how-to-creating-aws-ec2-readonly-credentials-with-iam/">
+            How to set up read-only key/secret for my cloud?
+        </a>
+    </div>
+
+</form>

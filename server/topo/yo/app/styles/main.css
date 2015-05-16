@@ -1,0 +1,54 @@
+/* remedy empty href in angular-ui-bootstrap templates */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+/* site wide */
+body { background-color: #fff; min-height: 800px; }
+#main_view_container { min-height: 450px; }
+.bg-white { background-color: #fff; }
+.bg-grey { background-color: #fbfbfa; }
+.text-muted { color: #999; }
+.page-title { margin-top: 0px; margin-bottom: 25px; font-size: 28px; }
+.footer-nav li { display: inline; list-style-type: none; padding-right: 20px; }
+.text-error { color: red; font-style: italic; }
+/* a temp fix to: https://github.com/angular-ui/bootstrap/issues/2970 */
+.modal-backdrop { bottom: 0; }
+
+/* home page */
+.banner {
+  color: #fff;
+  background: 
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.15) 30%, rgba(255,255,255,.3) 32%, rgba(255,255,255,0) 33%) 0 0,
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.1) 11%, rgba(255,255,255,.3) 13%, rgba(255,255,255,0) 14%) 0 0,
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 17%, rgba(255,255,255,.43) 19%, rgba(255,255,255,0) 20%) 0 110px,
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 11%, rgba(255,255,255,.4) 13%, rgba(255,255,255,0) 14%) -130px -170px,
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 11%, rgba(255,255,255,.4) 13%, rgba(255,255,255,0) 14%) 130px 370px,
+    radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.1) 11%, rgba(255,255,255,.2) 13%, rgba(255,255,255,0) 14%) 0 0,
+    radial-gradient(circle farthest-corner at left top, #fff 0%, #91C553 20%, #81BE50 50%, #77B646 80%, #699E41 100%);
+  background-size: 470px 470px, 970px 970px, 410px 410px, 610px 610px, 530px 530px, 730px 730px, 100% 100%;
+  background-color: #699E41;
+  margin-top: -20px;
+}
+.banner-heading { color: #fff; font-size: 68px; margin-bottom: 30px; }
+.banner-subheading { color: #fcfcfc; font-size: 36px; }
+.section { padding-bottom: 80px; padding-top: 80px; }
+.section-heading { font-size: 48px; margin-bottom: 20px; }
+.section-bullet-icon { display: inline-block; }
+.section-bullet-heading { margin-top: 10px; }
+
+.multi-form-container { padding-bottom: 15px; }
+
+.code-block {background-color:#eee; font:normal 14px monospace; padding:15px 7px 15px 7px; border-left:3px solid Maroon}
+
+.tooltipster-shadow {
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 0px 0px 14px rgba(0,0,0,0.3);
+	color: #2c2c2c;
+}
+.tooltipster-shadow .tooltipster-content {
+	font-family: 'Arial', sans-serif;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+}
+

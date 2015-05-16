@@ -1,0 +1,27 @@
+[
+{
+    "availabilityZone" : "us-west",
+    "region" : "West",
+    "instanceId" : "i-57cd525c",
+    "instanceType" : "Free",
+    "instanceState" : "UP",
+    "dataStatus" : "OK",
+    "cpuUsage" : "0.5",
+    "memoryUsage" : "312",
+    "loadLevel" : "0.1",
+    "price": "1.337"
+},
+
+{
+    "availabilityZone" : "us-west-2",
+    "region" : "PHX",
+    "instanceId" : "i-57cd525b",
+    "instanceType" : "PRO",
+    "instanceState" : "DOWN",
+    "dataStatus" : "OK",
+    "cpuUsage" : "0.5",
+    "memoryUsage" : "260",
+    "loadLevel" : "0.2",
+    "price": "2.447"
+}
+]

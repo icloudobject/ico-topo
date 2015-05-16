@@ -1,0 +1,51 @@
+<div class="alert alert-danger" ng-show="httpError">
+    Server or network errors. Please try again later.
+</div>
+<div class="alert alert-danger" ng-show="serverErrors!=null">
+    <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+</div>
+
+<form class="form" name="s3signUpForm" ng-submit="signupS3()" novalidate>
+
+    <div class="col-md-3 form-group" ng-class="{
+        'has-error': s3signUpForm.bucketName.$invalid,
+        'has-success': s3signUpForm.bucketName.$valid}">
+        <input type="text" name="bucketFilePrefix" class="form-control"
+            placeholder="billing file path in s3"
+            ng-model="s3Config.bucketFilePrefix"  ico-focus required autofocus />
+        <p class="help-block"
+            ng-show="s3signUpForm.bucketName.$invalid
+                && !s3signUpForm.bucketName.$focused">
+            Invalid bucket Path
+        </p>
+    </div>
+    <div class="col-md-3 form-group" ng-class="{
+        'has-error': s3signUpForm.bucketName.$invalid,
+        'has-success': s3signUpForm.bucketName.$valid}">
+        <input type="text" name="bucketName" class="form-control"
+            placeholder="s3 bucket name"
+            ng-model="s3Config.bucketName" ng-minlength="2"
+            ng-maxlength="64" ico-focus required autofocus />
+        <p class="help-block"
+            ng-show="s3signUpForm.bucketName.$invalid
+                && !s3signUpForm.bucketName.$focused">
+            Invalid bucket name
+        </p>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-lg"
+            ng-disabled="submitting" ng-switch="submitting">
+            <span ng-switch-default>Load cost info</span>
+            <span ng-switch-when="true">Loading cost info</span>
+        </button>
+    </div>
+
+    <div class="form-group">
+        <a target="_blank"
+            href="http://elastic-security.com/2014/01/08/how-to-creating-aws-ec2-readonly-credentials-with-iam/">
+            How to set up retrieve bill information from cloud?
+        </a>
+    </div>
+
+</form>

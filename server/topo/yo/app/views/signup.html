@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h4 class="modal-title">Sign Up</h4>
+</div>
+
+<div class="modal-body">
+    <div class="alert alert-danger" ng-show="httpError">
+    	{{ 'err.http' | translate }}
+    </div>
+    <div class="alert alert-danger" ng-show="serverErrors!=null">
+        <ul> <li ng-repeat="e in serverErrors">{{ e }}</li> </ul>
+    </div>
+	<div class="alert alert-success" ng-show="success">
+        {{ 'msg.signupOk' | translate }}
+    </div>
+    <form class="form" name="signupForm" ng-submit="signup()" novalidate>
+        <div class="form-group" ng-class="{
+            'has-error': signupForm.username.$invalid && signupForm.username.$dirty,
+			'has-success': signupForm.username.$valid && signupForm.username.$dirty }">
+            <label for="username">Username</label>
+            <input type="text" name="username" class="form-control" placeholder="Pick a username"
+            	ng-model="formalUser.username" ng-minlength="6" ng-maxlength="64" ico-focus required autofocus />
+            <p class="help-block"
+                ng-show="signupForm.username.$invalid && signupForm.username.$dirty && !signupForm.username.$focused">
+                {{ 'err.username' | translate }}
+            </p>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': signupForm.password.$invalid && signupForm.password.$dirty,
+			'has-success': signupForm.password.$valid && signupForm.password.$dirty }">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Enter a password"
+            	ng-model="formalUser.password" ng-minlength="8" ng-maxlength="64" ico-focus required />
+            <p class="help-block"
+                ng-show="signupForm.password.$invalid && signupForm.password.$dirty && !signupForm.password.$focused">
+                {{ 'err.password' | translate }}
+            </p>
+        </div>
+        <div class="form-group" ng-class="{
+            'has-error': signupForm.email.$invalid && signupForm.email.$dirty,
+			'has-success': signupForm.email.$valid && signupForm.email.$dirty }">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Your email address"
+            	ng-model="formalUser.email" ng-maxlength="64" ico-focus required />
+            <p class="help-block"
+                ng-show="signupForm.email.$invalid && signupForm.email.$dirty && !signupForm.email.$focused">
+                {{ 'err.email' | translate }}
+            </p>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="submitting" ng-switch="submitting">
+                <span ng-switch-default>Sign Up</span>
+                <span ng-switch-when="true">Submitting...</span>
+            </button>
+        </div>
+    </form>
+</div>

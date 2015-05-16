@@ -1,0 +1,187 @@
+{
+
+	"global": {
+		"siteId": "iCloudObject",
+		"slogan": "Measure, optimize, and save!",
+		"copyright": "Copyright 2014 iCloudObject.com"
+	},
+
+	"nav": {
+		"trial": "Free Trial",
+		"dash": "Dashboard",
+		"topo": "Topology",
+		"opti": "Optimization",
+		"terms": "Terms",
+		"privacy": "Privacy",
+		"login": "Login",
+		"logout": "Logout",
+		"editProfile": "Edit Profile",
+		"chngPass": "Change Password",
+		"mngClouds": "Manage Cloud Accounts",
+		"instAgent": "Install Agent",
+		"signup": "Sign Up"
+	},
+	
+	"err": {
+		"http": "Server or network errors. Please try again later.",
+		"username": "Username must contain 6 - 64 characters and must contain only letters, digits, underscores",
+		"password": "Password must contain 8 - 64 characters.",
+		"email": "Not a valid Email address.",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"msg": {
+		"submitting": "Submitting...",
+		"signupOk": "You have successfully signed up!",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"home": {
+		"headLn1": "You spend too much on cloud compute resources.",
+		"headLn2": "We help you find out and save.",
+		"bnft": "Run More Pay Less",
+		"bnftSub": "iCloudObject maximizes your computing resource utilization and reduces your total data center cost.",
+		"bnftOp": "Operational Excellence",
+		"bnftOpSub": "Manage your cloud computing resources through a holistic view of infrastructure configuration, process statistics.",
+		"bnftRes": "Resource Efficiency",
+		"bnftResSub": "Improve your resource efficiency in the cloud and save money through fine-grained consumption monitoring.",
+		"sol": "How we get it done?",
+		"solSub": "iCloudObject offers a fine-grained resource consumption monitoring solution, big data analysis, to help our customer to save on resource utilization.",
+		"solMeasure": "Measure",
+		"solMeasureSub": "Our light weight ICO agent will collect process usage information, such usage patterns are discovered and presented to our customer in a holistic view.",
+		"solAnalyze": "Analyze",
+		"solAnalyzeSub": "Our ICO big data analizer will analyze the usage pattern, present the resource reduction strategies to our customer.",
+		"solSave": "Save",
+		"solSaveSub": "Our Ico solution works for you every minutes to allow you run less number of computes."
+	},
+	
+	"setup": {
+		"agentIntro": "ICO Agent is a Java SE application that periodically collects resource usage data of the top processes on your cloud-based hosts/instances. These data will be used by the ICO Optimizer to develop optimal cost saving plans for your cloud tenancy.",
+		"agentInstCmd": "To install the ICO Agent as a service on your host/instance:",
+		"agentInstErr": "Failed to initialize agent download/install instruction. Please try again later.",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"login": {
+		"username": "Username",
+		"pass": "Password",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"trial": {
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"dash": {
+		"noAgentData": "It seems you haven't installed any ICO Agent yet, and the dashboard data is not ready.",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"topo": {
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	},
+	
+	"opti": {
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	}
+
+}
