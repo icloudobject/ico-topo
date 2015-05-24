@@ -35,7 +35,7 @@
 			<artifactId>model</artifactId>
 			<version>${ico.model.version}</version>
 		</dependency>
-			
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -193,7 +193,7 @@
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<version>${thymeleaf.layout.version}</version>
 		</dependency>
-		
+
 		<!-- Commons and Utils -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -214,7 +214,7 @@
 
 	<build>
 		<plugins>
-			<!-- set compiler versions -->	
+			<!-- set compiler versions -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -261,9 +261,9 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
-			
-						<plugin>
+
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
@@ -309,9 +309,9 @@
 							</resources>
 						</configuration>
 					</execution>
-    			</executions>
+				</executions>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 

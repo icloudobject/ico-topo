@@ -29,7 +29,9 @@ import com.icloudobject.topo.skeleton.AwsCloudConfig;
 @Controller
 public class TopoController {
 
-	private static Logger logger = LoggerFactory.getLogger(TopoController.class);
+	private static final String CLOUD_INSTANCE_QUERY = "Cloud{@id}.cloud!Region{@id}.region!AvailabilityZone{@id}.availabilityZone!Instance{@id}";
+
+    private static Logger logger = LoggerFactory.getLogger(TopoController.class);
 
 	@Autowired
     private CloudService cloudsService;
@@ -40,16 +42,27 @@ public class TopoController {
 		CloudConfig cloudConfig = AwsCloudConfig.getInstance();//  currentUser.getCloudConfig();
 		cloudsService.initScan(cloudConfig);
 		
-		if (cloudsService.initDone(cloudConfig)) {
-            ObjectNode node = cloudsService.loadQueryTree(cloudConfig,
-                    "Cloud{@id}.cloud!Region{@id}.region!AvailabilityZone{@id}.availabilityZone!Instance{@id}");
-			return node.toString();
-		} else {
+        if (cloudsService.initDone(cloudConfig)) {
+            ObjectNode node = cloudsService.loadQueryTree(cloudConfig, CLOUD_INSTANCE_QUERY);
+            return node.toString();
+        } else {
 			Exception e = new Exception("Cloud first scan not finished yet.");
 			logger.error("", e);
 			throw e;
 		}
 	}
+
+    @RequestMapping(value = "/api/topo/", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkTopo() {
+        CloudConfig cloudConfig = AwsCloudConfig.getInstance();
+        if (cloudsService.initDone(cloudConfig)) {
+            ObjectNode node = cloudsService.loadQueryTree(cloudConfig, CLOUD_INSTANCE_QUERY);
+            return node.toString();
+        } else {
+            return "[]";
+        }
+    }
 
     @RequestMapping(value = "/api/topo/hello", method = RequestMethod.GET)
     @ResponseBody
@@ -57,7 +70,7 @@ public class TopoController {
         return "Hello, Topo";
     }
 
-	@RequestMapping(value = "/api/topo_next/{resource}/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/topo_next/{resource}/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getNeighbor(/*final @AuthenticationPrincipal IcoUser currentUser,*/
 			@PathVariable("resource") String resourceType,
