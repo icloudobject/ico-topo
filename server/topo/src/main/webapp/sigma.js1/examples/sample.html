@@ -1,0 +1,307 @@
+<html>
+<head>
+    <title>Topology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    
+</head>
+
+<body>
+<!-- START SIGMA IMPORTS -->
+<script src="../src/sigma.core.js"></script>
+<script src="../src/conrad.js"></script>
+<script src="../src/utils/sigma.utils.js"></script>
+<script src="../src/utils/sigma.polyfills.js"></script>
+<script src="../src/sigma.settings.js"></script>
+<script src="../src/classes/sigma.classes.dispatcher.js"></script>
+<script src="../src/classes/sigma.classes.configurable.js"></script>
+<script src="../src/classes/sigma.classes.graph.js"></script>
+<script src="../src/classes/sigma.classes.camera.js"></script>
+<script src="../src/classes/sigma.classes.quad.js"></script>
+<script src="../src/classes/sigma.classes.edgequad.js"></script>
+<script src="../src/captors/sigma.captors.mouse.js"></script>
+<script src="../src/captors/sigma.captors.touch.js"></script>
+<script src="../src/renderers/sigma.renderers.canvas.js"></script>
+<script src="../src/renderers/sigma.renderers.webgl.js"></script>
+<script src="../src/renderers/sigma.renderers.svg.js"></script>
+<script src="../src/renderers/sigma.renderers.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="../src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="../src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="../src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="../src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="../src/misc/sigma.misc.animation.js"></script>
+<script src="../src/misc/sigma.misc.bindEvents.js"></script>
+<script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="../src/misc/sigma.misc.drawHovers.js"></script>
+
+<!-- END SIGMA IMPORTS -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">iCloudObject</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="http://www.icloudobject.com">About Us</a></li>
+            </ul>
+            <!-- <form class="navbar-form pull-right" > -->
+            <div class="navbar-form pull-right">
+              <input class="input-large" type="password" id="tokenDiv" placeholder="Input your token here..">
+              <button class="btn btn-primary" onclick="loadTopo();return false;">Show Topo</button>
+            </div>
+            <!-- </form> -->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+<div id="container">
+  <style>
+    #graph-container {
+      background: #fff;
+      height: 100%;
+      max-width: 1000px;
+      margin: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #disc {
+      position: absolute;
+      top: 100%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    #ground {
+      position: absolute;
+      background: #ccc;
+      top: 100%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  </style>
+  <div>
+    <div id="loadingDiv"/>
+  <div id="graph-container">
+    <div id="disc"></div>
+    <div id="ground"></div>
+  </div>
+  </div>
+</div>
+<script>
+$(document).ready(
+  function()
+  {
+    // init
+    s = new sigma({
+      renderer: {
+        container: document.getElementById('graph-container'),
+        type: 'canvas'
+      },
+      settings: {
+        autoRescale: false,
+        mouseEnabled: false,
+        touchEnabled: false,
+        nodesPowRatio: 1,
+        edgesPowRatio: 1,
+        defaultEdgeColor: '#333',
+        defaultNodeColor: '#333',
+        edgeColor: 'default'
+      }
+    });
+
+    // starting check status
+    loadTopoStatus();
+  }
+  );
+
+function loadTopoStatus()
+{
+      $.ajax({
+        url: "/api/topo",
+        type: "GET",
+        dataType : "json",
+        success: function( json ) {
+          var instances = eval(json);
+          if (json.length==0)
+          {
+            $("#loadingDiv")
+          } else {
+            s.graph.read({
+              nodes: [],
+              edges: []
+            });
+          }
+        },
+        error: function( xhr, status, errorThrown ) {
+          $("loadingDiv").text( "Sorry, there was a problem!" );
+        }
+    });
+}
+
+ function loadTopo()
+ {
+  $("loadingDiv");
+  var token = $("#tokenDiv").val();
+  if(token.length == 0)
+  {
+    // check status
+    loadTopoStatus();
+  }
+  else
+  {
+    // trigger show topo
+    triggerTopoInit(token);
+  }
+ }
+
+ function triggerTopoInit(token)
+ {
+      $.ajax({
+        url: "/api/topo/",
+        type: "POST",
+        dataType : "json",
+        data: {
+          token: token
+        },
+        success: function( json ) {
+          var instances = eval(json);
+          if (json.length==0)
+          {
+            $("#loadingDiv")
+          } else {
+            s.graph.read({
+              nodes: [],
+              edges: []
+            });
+          }
+        },
+        error: function( xhr, status, errorThrown ) {
+          alert( "Sorry, there was a problem!" );
+        }
+    });
+ }
+
+ function loadTopoNeighbors(token)
+ {
+      $.ajax({
+        url: "/api/topo/",
+        type: "POST",
+        dataType : "json",
+        data: {
+          token: token
+        },
+        success: function( json ) {
+          var instances = eval(json);
+          if (json.length==0)
+          {
+            $("#loadingDiv");
+          } else {
+            s.graph.read({
+              nodes: [],
+              edges: []
+            });
+          }
+        },
+        error: function( xhr, status, errorThrown ) {
+          alert( "Sorry, there was a problem!" );
+        }
+    });
+ }
+
+  /**
+   * INITIALIZATION SCRIPT:
+   * **********************
+   */
+  
+  dom = document.querySelector('#graph-container');
+  disc = document.getElementById('disc');
+  ground = document.getElementById('ground');
+  /**
+   * EVENTS BINDING:
+   * ***************
+   */
+  dom.addEventListener('click', function(e) {
+    // Find click node
+    var x,
+        y,
+        p,
+        id,
+        neighbors;
+
+    x = sigma.utils.getX(e) - dom.offsetWidth / 2;
+    y = sigma.utils.getY(e) - dom.offsetHeight / 2;
+
+    p = c.cameraPosition(x, y);
+    x = p.x;
+    y = p.y;
+
+    // post request
+    neighbors = s.graph.nodes().filter(function(n) {
+      return (Math.sqrt(
+        Math.pow(n.x - x, 2) +
+        Math.pow(n.y - y, 2)
+      ) - n.size) < radius;
+    });
+
+    if (!spaceMode)
+      s.graph.addNode({
+        id: (id = (++nId) + ''),
+        size: nodeRadius,
+        x: x + Math.random() / 10,
+        y: y + Math.random() / 10,
+        dX: 0,
+        dY: 0,
+        type: 'goo'
+      });
+
+    neighbors.forEach(function(n) {
+      if (!spaceMode)
+        s.graph.addEdge({
+          id: (++eId) + '',
+          source: id,
+          target: n.id,
+          type: 'goo'
+        });
+      else
+        s.graph.dropNode(n.id);
+    });
+  }, false);
+
+</script>
+
+</body>
+</html>
